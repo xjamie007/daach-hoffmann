@@ -10,6 +10,7 @@ import { client, servicesByOrder } from '~/config/client.config';
 import { telHref, whatsappHref } from '@/lib/site';
 import { CloseIcon, PhoneIcon, WhatsAppIcon, ArrowRightIcon } from '@/components/ui/icons';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { Wordmark } from '@/components/brand/Wordmark';
 
 /**
  * Mobile navigation.
@@ -110,7 +111,16 @@ export function MobileNav() {
       className="mobile-panel fixed inset-0 z-[60] flex flex-col overflow-y-auto overscroll-contain lg:hidden"
     >
       <div className="flex min-h-[4.5rem] shrink-0 items-center justify-between px-[var(--gutter-x)]">
-        <img src="/brand/logo.png" alt="" width={640} height={389} className="h-9 w-auto" />
+        {/*
+          <Wordmark> rather than a hand-written <img>, because this one was
+          hand-written and hard-coded `/brand/logo.png`. Nothing prefixes an
+          `src` written by hand: on a project site served from /<repo> that is
+          a request to the domain root, it 404s, and the logo simply is not
+          there when the menu opens — the header's logo, which goes through
+          <Wordmark>, was fine the whole time. One component, one place the
+          base path is applied.
+        */}
+        <Wordmark className="h-9" />
         <button
           type="button"
           onClick={() => {

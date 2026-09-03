@@ -144,9 +144,8 @@
     "choose": "Veuillez choisir",
     "mapHeading": "Accès",
     "mapLoad": "Charger la carte",
-    "mapNotice": "La carte n’est chargée depuis OpenStreetMap qu’après un clic. Avant cela, aucune requête ne quitte votre navigateur.",
-    "mapProvider": "OpenStreetMap",
-    "openInMaps": "Ouvrir dans une application de cartes",
+    "mapNotice": "La carte n’est chargée depuis Google Maps qu’après un clic. Google reçoit alors votre adresse IP. Avant cela, aucune requête ne quitte votre navigateur.",
+    "openInMaps": "Ouvrir dans Google Maps",
     "contactHeading": "Nous joindre directement",
     "hoursHeading": "Disponibilité"
   },

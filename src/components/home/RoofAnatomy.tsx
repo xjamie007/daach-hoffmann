@@ -101,10 +101,24 @@ const LABELS: {
     makes a floor on type size rather than a preference.
 
     So the label moves into the empty band above the ridge instead, where the
-    only thing to the right is air. From x=950 the longest of the three ends at
-    1220.4, which also clears the 56px scroll fade `.anatomy-figure::after`
-    lays over the right edge below 52rem. Roughly 100px of headroom is left for
-    a fourth language.
+    only thing to the right is air.
+
+    Two corrections after measuring the first attempt at x=950, y=176. It
+    overlapped nothing — but it sat at the *same height* as the chimney cap
+    (y 132..154) with 16px between them, and its leader terminated at x=936,
+    two pixels from the cap's right edge at x=934. Neither is a collision and
+    both read as one: level with an object and touching it is what the eye
+    calls overlapping.
+
+    It is now clear of the cap on both axes — 32px to the right of it and 15px
+    above it — and the leader terminates at x=952, 18px clear of the cap. The
+    empty region above y=130 and right of x=940 is 380 by 130 units, so this
+    is the roomy part of the canvas rather than the pinch beside the chimney.
+    The baseline also lands near the left column's topmost label, which is why
+    the two sides read as one drawing.
+
+    Widths still fit with room: French, the longest, runs 966..1236.4, leaving
+    83.6px before the viewBox ends.
 
     The anchor moves with it, onto the tiles immediately down-slope of the
     chimney's right flashing rather than into the middle of the chimney shaft.
@@ -113,7 +127,7 @@ const LABELS: {
     on the red flashing, where it would vanish. The covering at x=968 runs from
     y=230.9 to y=267.8, so y=248 sits on it.
   */
-  { id: 'chimney', anchor: { x: 968, y: 248 }, label: { x: 950, y: 176 }, align: 'start' },
+  { id: 'chimney', anchor: { x: 968, y: 248 }, label: { x: 966, y: 110 }, align: 'start' },
 ];
 
 export async function RoofAnatomy({ locale }: { readonly locale: Locale }) {

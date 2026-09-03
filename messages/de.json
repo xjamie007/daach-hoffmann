@@ -144,9 +144,8 @@
     "choose": "Bitte wählen",
     "mapHeading": "Anfahrt",
     "mapLoad": "Karte laden",
-    "mapNotice": "Die Karte wird erst auf Klick von OpenStreetMap geladen. Vorher verlässt keine Anfrage Ihren Browser.",
-    "mapProvider": "OpenStreetMap",
-    "openInMaps": "In Karten-App öffnen",
+    "mapNotice": "Die Karte wird erst auf Klick von Google Maps geladen. Dabei erhält Google Ihre IP-Adresse. Vorher verlässt keine Anfrage Ihren Browser.",
+    "openInMaps": "In Google Maps öffnen",
     "contactHeading": "Direkt erreichen",
     "hoursHeading": "Erreichbarkeit"
   },

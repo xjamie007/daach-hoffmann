@@ -1,38 +1,45 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { MapPinIcon } from '@/components/ui/icons';
 import { client } from '~/config/client.config';
 
 /**
- * Click-to-load map.
+ * Click-to-load Google Maps.
  *
- * Section 14.3 rules out embedding Google Maps directly: the embed contacts
+ * Section 14.3 rules out embedding Google Maps *directly*: the embed contacts
  * Google and transfers the visitor's IP address before any consent exists, and
- * there is no legal basis for that on a page someone merely opened. It permits
- * a static representation with click-to-load, or an OpenStreetMap embed that
- * works without consent.
+ * there is no legal basis for that on a page someone merely opened. What it
+ * permits is a locally drawn representation with click-to-load — which is
+ * what this is. Until the button is pressed nothing is requested from
+ * anywhere; the placeholder is drawn here, in this file. Pressing it is the
+ * consenting act, and the notice states what will happen before it happens
+ * rather than after. So the map is Google's, and the page still needs no
+ * cookie banner.
  *
- * This does both at once. Until the button is pressed, nothing is requested
- * from anywhere — the placeholder is drawn locally. Pressing it loads the
- * OpenStreetMap embed, and the notice says plainly what that means before it
- * happens rather than after.
+ * The keyless embed endpoint is used deliberately. The supported route is the
+ * Maps Embed API with a billable key, and there is no Google key for this
+ * business yet; `output=embed` needs none, so the map works today rather than
+ * after an account is set up. Swapping in the Embed API later is this one URL.
  *
- * The address and the directions link work without any of this, so a visitor
- * who never presses the button loses nothing they actually needed.
+ * The address and the maps link work without any of this, so a visitor who
+ * never presses the button loses nothing they actually needed. That link used
+ * to be a `geo:` URL, which no desktop browser handles — it was a button that
+ * did nothing for anyone not on a phone. The Google URL deep-links into the
+ * app where one is installed and opens the web map everywhere else.
  */
 export function MapEmbed() {
   const t = useTranslations('form');
+  const locale = useLocale();
   const [loaded, setLoaded] = useState(false);
 
   const { lat, lng } = client.address.geo;
-  const delta = 0.008;
-  const bbox = [lng - delta, lat - delta / 2, lng + delta, lat + delta / 2].join('%2C');
-  const embedUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat}%2C${lng}`;
-  const geoUrl = `geo:${lat},${lng}?q=${encodeURIComponent(
-    `${client.address.street}, ${client.address.postalCode} ${client.address.locality}`,
-  )}`;
+  // Coordinates rather than the address string: a geocoder that fails to find
+  // a small business in Holzem would drop the pin on the wrong village, and
+  // this is the one thing on the page that has to be exactly right.
+  const embedUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=16&hl=${locale}&output=embed`;
+  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
 
   if (loaded) {
     return (
@@ -41,12 +48,16 @@ export function MapEmbed() {
           src={embedUrl}
           title={`${client.name} — ${client.address.locality}`}
           loading="lazy"
-          referrerPolicy="no-referrer"
+          referrerPolicy="no-referrer-when-downgrade"
+          allowFullScreen
           className="block aspect-[4/3] w-full border-0"
         />
-        <p className="bg-surface-sunken px-4 py-2.5 text-[0.75rem] text-ink-subtle">
-          © {t('mapProvider')}
-        </p>
+        {/*
+          No attribution line of our own. The OpenStreetMap embed this replaced
+          needed one — ODbL requires it and the iframe does not carry it — but
+          Google's embed attributes itself inside the frame ("Kartendaten
+          ©2026 Google"), so a caption underneath said the same thing twice.
+        */}
       </div>
     );
   }
@@ -93,7 +104,10 @@ export function MapEmbed() {
             {t('mapLoad')}
           </button>
           <a
-            href={geoUrl}
+            href={mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+
             className="inline-flex min-h-12 items-center rounded-sm border border-border-strong px-5 font-heading font-semibold text-ink no-underline transition-colors duration-fast ease-out hover:border-navy-900 hover:bg-navy-900/6"
           >
             {t('openInMaps')}

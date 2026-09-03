@@ -144,9 +144,8 @@
     "choose": "Please choose",
     "mapHeading": "Getting here",
     "mapLoad": "Load map",
-    "mapNotice": "The map is only loaded from OpenStreetMap once you click. Until then no request leaves your browser.",
-    "mapProvider": "OpenStreetMap",
-    "openInMaps": "Open in a maps app",
+    "mapNotice": "The map is only loaded from Google Maps once you click. Google then receives your IP address. Until then no request leaves your browser.",
+    "openInMaps": "Open in Google Maps",
     "contactHeading": "Reach us directly",
     "hoursHeading": "Availability"
   },

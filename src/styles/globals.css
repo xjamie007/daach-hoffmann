@@ -785,7 +785,11 @@ body {
   inset-inline-end: 0;
   width: 3.5rem;
   pointer-events: none;
-  background-image: linear-gradient(to left, var(--color-surface-sunken), transparent);
+  /* The tone of the section this figure actually sits in. It faded to
+     `surface-sunken` while the anatomy section is `tone="tint"`, so the
+     affordance read as a grey smudge over the drawing rather than as the
+     drawing running out of the frame. */
+  background-image: linear-gradient(to left, var(--color-surface-tint), transparent);
 }
 
 @media (min-width: 52rem) {

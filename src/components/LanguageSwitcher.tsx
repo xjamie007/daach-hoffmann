@@ -5,6 +5,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { locales, type Locale } from '@/i18n/routing';
 import { rememberLocale } from '@/lib/locale';
+import { servicesByOrder } from '~/config/client.config';
 
 const LABELS: Record<Locale, { full: string; short: string }> = {
   de: { full: 'Deutsch', short: 'DE' },
@@ -28,6 +29,44 @@ export function LanguageSwitcher({ className }: { readonly className?: string })
   const params = useParams();
   const router = useRouter();
 
+  /*
+    Dynamic segments have to be re-resolved, not passed through.
+
+    Every page except the home page and the styleguide is served by one
+    catch-all, `/[locale]/[...slug]`, because a static export runs no
+    middleware and the app directory cannot hold three folder names for one
+    segment (see src/routes/registry.ts). So `useParams()` on a service page
+    returns `{ locale, slug: ['leistungen', 'dacheindeckung'] }` — there is no
+    `service` key, because no route declares one.
+
+    `usePathname()` still correctly reports the internal pathname
+    `/leistungen/[service]`. Handing that to the router together with params
+    that contain no `service` left the placeholder unsubstituted, and the
+    switcher navigated to the literal `/fr/prestations/[service]`: a 404 in
+    production, and silently nothing at all in dev. The home page worked,
+    which is what made it look like a translation problem rather than a
+    routing one.
+
+    So the current locale's slug is mapped back to its service and forward to
+    the target locale's slug. `servicesByOrder` is already in this bundle for
+    the mobile menu, so this costs no bytes on a page with a 120 KB budget.
+  */
+  function paramsFor(next: Locale): Record<string, string | string[]> {
+    const slug = params.slug;
+    const segments = Array.isArray(slug) ? slug : slug ? [slug] : [];
+    const last = segments[segments.length - 1];
+
+    if (pathname === '/leistungen/[service]' && last) {
+      const service = servicesByOrder.find((entry) => entry.slug[active] === last);
+      // No match means the URL is not one this build produced. Falling through
+      // with the raw params would navigate to a placeholder; better to send
+      // the visitor to the same page in their language than to a 404.
+      if (service) return { service: service.slug[next] };
+    }
+
+    return params as Record<string, string | string[]>;
+  }
+
   function switchTo(next: Locale) {
     if (next === active) return;
     rememberLocale(next);
@@ -39,7 +78,7 @@ export function LanguageSwitcher({ className }: { readonly className?: string })
     router.replace(
       // @ts-expect-error — `params` is correctly typed per route, but this
       // component is route-agnostic by design and cannot narrow the union.
-      { pathname, params },
+      { pathname, params: paramsFor(next) },
       { locale: next },
     );
   }
