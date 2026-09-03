@@ -6,7 +6,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 import { routing, type Locale } from '@/i18n/routing';
 import { fontHeading, fontBody } from '@/styles/fonts';
-import { siteUrl, alternateLanguages, absoluteUrl } from '@/lib/site';
+import { siteUrl, alternateLanguages, absoluteUrl, noindex, basePath } from '@/lib/site';
 import { client } from '~/config/client.config';
 import { JsonLd, organisationSchema } from '@/lib/schema';
 import { SiteHeader } from '@/components/layout/SiteHeader';
@@ -47,13 +47,24 @@ export async function generateMetadata({
       locale,
       type: 'website',
     },
-    robots: { index: true, follow: true },
+    /* The Pages preview also emits a per-page meta robots tag, because
+       robots.txt asks a crawler not to fetch a URL while this asks it not to
+       keep one it has already seen — a URL linked from elsewhere reaches the
+       index through the second route regardless of the first. */
+    robots: noindex ? { index: false, follow: false } : { index: true, follow: true },
+    /*
+      Next does not apply `basePath` to metadata icon URLs the way it does to
+      a <Link> or an imported asset — what is written here is emitted verbatim.
+      On a project site served from /<repo> that means three requests to the
+      domain root, all of them 404, and a site with no favicon and no
+      apple-touch icon for no visible reason. The prefix has to be explicit.
+    */
     icons: {
       icon: [
-        { url: '/icon.svg', type: 'image/svg+xml' },
-        { url: '/favicon.ico', sizes: '32x32' },
+        { url: `${basePath}/icon.svg`, type: 'image/svg+xml' },
+        { url: `${basePath}/favicon.ico`, sizes: '32x32' },
       ],
-      apple: '/apple-touch-icon.png',
+      apple: `${basePath}/apple-touch-icon.png`,
     },
     other: { 'theme-color': client.brand.themeColor },
   };

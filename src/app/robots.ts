@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { siteUrl, basePath } from '@/lib/site';
+import { siteUrl, basePath, noindex } from '@/lib/site';
 
 /**
  * robots.txt, section 13.3.
@@ -11,6 +11,19 @@ import { siteUrl, basePath } from '@/lib/site';
 export const dynamic = 'force-static';
 
 export default function robots(): MetadataRoute.Robots {
+  /*
+    On the Pages preview, everything is disallowed and no sitemap is advertised
+    — a sitemap next to a blanket Disallow is a contradiction crawlers resolve
+    in the direction nobody wants. See `noindex` in src/lib/site.ts for why the
+    preview must not be indexed.
+  */
+  if (noindex) {
+    return {
+      rules: [{ userAgent: '*', disallow: '/' }],
+      host: siteUrl,
+    };
+  }
+
   return {
     rules: [
       {

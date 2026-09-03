@@ -1,0 +1,87 @@
+# Build the static export and publish it to GitHub Pages.
+#
+# The site is a static export by design — see the "Hosting-Einschränkung
+# GitHub Pages" section of PRODUCT.md — so there is nothing to run at request
+# time and the whole deployment is an artefact upload.
+#
+# Three environment variables carry every decision that differs between this
+# preview and the eventual production host. All three are read by
+# next.config.ts and src/lib/site.ts; none of them is a secret.
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # So a deployment can be re-run without an empty commit, e.g. after the
+  # business supplies the missing legal data and NEXT_PUBLIC_NOINDEX is dropped.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A queued deployment replaces a waiting one but never interrupts one that is
+# already publishing, which would leave the site half-written.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # `npm ci` rather than `npm install`: it installs exactly the committed
+      # lockfile and fails if the two have drifted, which is the point of
+      # having a lockfile at all. Dev dependencies are needed — sharp builds
+      # the image derivatives during `npm run build`.
+      - run: npm ci
+
+      # The project's own acceptance gates: types, WCAG contrast pairs, the
+      # three-language parity check, minimum word counts, and the check that
+      # the form's vocabulary matches between the app and the Edge Function.
+      # A deployment that fails these should not reach the web.
+      - run: npm run check
+
+      - run: npm run build
+        env:
+          # A project site is served from /<repo>, not from the domain root.
+          # Clear this when a custom domain is configured.
+          NEXT_PUBLIC_BASE_PATH: /daach-hoffmann
+          # The bare ORIGIN, with no path. src/lib/site.ts composes absolute
+          # URLs as siteUrl + basePath + route, so including /daach-hoffmann
+          # here emits every canonical, hreflang, sitemap entry and JSON-LD URL
+          # with the repository name twice.
+          NEXT_PUBLIC_SITE_URL: https://xjamie007.github.io
+          NEXT_PUBLIC_DEPLOY_TARGET: static
+          # Keeps the preview out of search engines while the Mentions légales
+          # are still incomplete and the real domain is not live. Remove this
+          # line to make the deployment indexable — that is the whole switch.
+          NEXT_PUBLIC_NOINDEX: '1'
+
+      # Belt and braces. The artefact deployment below does not run Jekyll, but
+      # a repository whose Pages source is ever switched back to a branch would
+      # have Jekyll strip `_next/` — every path beginning with an underscore —
+      # and the site would load as unstyled HTML with no explanation.
+      - run: touch out/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

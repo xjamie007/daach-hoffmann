@@ -13,6 +13,25 @@ export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? `https://www.${clien
 /** Set when the site is served from a sub-path, e.g. a GitHub Pages project site. */
 export const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? '').replace(/\/$/, '');
 
+/**
+ * Keep this deployment out of search engines.
+ *
+ * Set on the GitHub Pages preview and nowhere else. Two reasons, and both are
+ * from PRODUCT.md rather than from caution:
+ *
+ *  · The Mentions legales are knowingly incomplete. The law of 14 August 2000
+ *    requires the RCS number, the Autorisation d'etablissement number and the
+ *    VAT identification number, none of which the business has supplied yet —
+ *    twenty-one fields on that page still render as visible placeholders. An
+ *    indexed page is a published one.
+ *  · The preview lives on a github.io sub-path. Indexed, it competes with
+ *    www.daach-hoffmann.lu for the business's own name and is the copy Google
+ *    would find first, on a hostname the client does not control.
+ *
+ * Clearing the variable is the whole switch — see .github/workflows/deploy.yml.
+ */
+export const noindex = process.env.NEXT_PUBLIC_NOINDEX === '1';
+
 /** Path relative to the deployment root, including the base path. */
 export function localePath(locale: Locale, pathname: AppPathname, params?: Record<string, string>): string {
   const resolved = getPathname({

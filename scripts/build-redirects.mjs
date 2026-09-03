@@ -39,7 +39,15 @@ const redirects = [
   French-speaking existing customer to a German page.
 */
 
-const template = (to) => `<!doctype html>
+/*
+  The same base path the app is built with. These documents are written by hand
+  rather than by Next, so nothing prefixes them automatically: without this,
+  every legacy URL redirects to the domain root on a project site — seven dead
+  ends, and precisely the incoming links section 13.3 exists to preserve.
+*/
+const basePath = (process.env.NEXT_PUBLIC_BASE_PATH ?? '').replace(/\/$/, '');
+
+const template = (rawTo) => { const to = `${basePath}${rawTo}`; return `<!doctype html>
 <html lang="fr">
   <head>
     <meta charset="utf-8">
@@ -53,7 +61,7 @@ const template = (to) => `<!doctype html>
     <p>Cette page a déménagé. <a href="${to}">Continuer vers la nouvelle page</a>.</p>
   </body>
 </html>
-`;
+`; };
 
 mkdirSync(join(root, 'public'), { recursive: true });
 
