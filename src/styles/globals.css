@@ -772,29 +772,38 @@ body {
   edge fades and a hint sits under it, both only while the content actually
   overflows.
 */
+/*
+  The drawing scrolls sideways on a phone, and its right edge fades so that
+  "there is more over there" is visible rather than merely true.
+
+  The fade is a mask on the figure, not an overlay inside it, and that is the
+  whole point. It was an absolutely positioned `::after` pinned with
+  `inset-inline-end: 0` — but an absolutely positioned child of a scroll
+  container is positioned against the *padding box* and then scrolls with the
+  content. At rest it sat correctly on the right edge; the moment anyone
+  swiped, it slid inwards and laid a pale band straight across the middle of
+  the roof. It only ever looked right in the one state nobody stays in, which
+  is why it survived so long.
+
+  A mask applies to the element's own painted output in the element's own
+  coordinate space, so it cannot drift no matter where the content is scrolled
+  to. It is also the idiom this file already uses for the photo marquee and
+  the service-area run. And because it fades to transparent rather than to a
+  colour, it stops depending on which tone the surrounding section happens to
+  be — the reason the old version had the wrong token in it for so long.
+*/
 .anatomy-figure {
   position: relative;
   scrollbar-width: thin;
   overscroll-behavior-x: contain;
+  mask-image: linear-gradient(to right, #000 calc(100% - 3.5rem), transparent 100%);
 }
 
-.anatomy-figure::after {
-  content: '';
-  position: absolute;
-  inset-block: 0;
-  inset-inline-end: 0;
-  width: 3.5rem;
-  pointer-events: none;
-  /* The tone of the section this figure actually sits in. It faded to
-     `surface-sunken` while the anatomy section is `tone="tint"`, so the
-     affordance read as a grey smudge over the drawing rather than as the
-     drawing running out of the frame. */
-  background-image: linear-gradient(to left, var(--color-surface-tint), transparent);
-}
-
+/* Above the breakpoint the whole drawing fits, so there is nothing to signal
+   and nothing to fade. */
 @media (min-width: 52rem) {
-  .anatomy-figure::after {
-    display: none;
+  .anatomy-figure {
+    mask-image: none;
   }
 }
 
