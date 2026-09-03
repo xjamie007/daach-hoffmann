@@ -33,9 +33,23 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # The major matters, and not for language features.
+      #
+      # package-lock.json is written by whichever npm the developer runs, and
+      # npm 10 and 11 disagree about unsatisfied OPTIONAL peer dependencies.
+      # The nested @swc/core@1.16.1 that next-intl pulls in declares an
+      # optional peer of @swc/helpers >=0.5.17, while next pins @swc/helpers to
+      # exactly 0.5.15. npm 11 skips the unsatisfiable optional peer and omits
+      # it from the lock; npm 10 tries to resolve it, finds no entry, and fails
+      # `npm ci` with "Missing: @swc/helpers@0.5.23 from lock file" — a message
+      # that points at neither the cause nor the fix.
+      #
+      # So CI runs the npm generation the lockfile was written by. Node 24
+      # ships npm 11. If the lockfile is ever regenerated under a different
+      # npm major, this pin has to move with it.
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '24'
           cache: npm
 
       # `npm ci` rather than `npm install`: it installs exactly the committed
