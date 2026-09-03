@@ -1,0 +1,43 @@
+{
+  "name": "daach-hoffmann",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "node scripts/optimize-images.mjs && node scripts/build-redirects.mjs && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "images": "node scripts/optimize-images.mjs",
+    "check:contrast": "node scripts/check-contrast.mjs",
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "check:pending": "node scripts/check-pending.mjs",
+    "check": "npm run typecheck && npm run check:contrast && npm run check:i18n && npm run check:content && npm run check:inquiry",
+    "preview": "node scripts/serve-static.mjs",
+    "check:content": "node scripts/check-content.mjs",
+    "check:bundle": "node scripts/check-bundle.mjs",
+    "check:inquiry": "node scripts/check-inquiry.mjs",
+    "build:redirects": "node scripts/build-redirects.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.113.0",
+    "next": "^15.5.25",
+    "next-intl": "^4.14.2",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "resend": "^6.25.0",
+    "server-only": "^0.0.1",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.4.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "postcss": "^8.5.26",
+    "sharp": "^0.35.4",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5.9.3"
+  }
+}

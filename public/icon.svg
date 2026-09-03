@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Daach Hoffmann">
+  <!-- The pitch mark from the wordmark, on the brand's slate ground. -->
+  <rect width="64" height="64" rx="8" fill="#1c2228"/>
+  <path d="M10 46 32 20 54 46" fill="none" stroke="#f7f5f1" stroke-width="7" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M32 20v26" fill="none" stroke="#c98b52" stroke-width="7" stroke-linecap="square"/>
+</svg>

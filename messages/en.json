@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "siteName": "Daach Hoffmann",
+    "tagline": "Roofers based in Holzem — working across Luxembourg",
+    "localeName": "English",
+    "localeNameShort": "EN"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content",
+    "mainNavigation": "Main navigation",
+    "footerNavigation": "Footer navigation",
+    "languageSwitcher": "Choose language",
+    "currentLanguage": "Current language",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "quickActions": "Quick actions: call, WhatsApp, request a quote",
+    "breadcrumb": "Breadcrumb",
+    "anatomyHint": "Arrow keys change the layer."
+  },
+  "nav": {
+    "home": "Home",
+    "services": "Services",
+    "projects": "Projects",
+    "about": "About us",
+    "process": "How it works",
+    "regions": "Area covered",
+    "contact": "Contact",
+    "legal": "Legal notice",
+    "privacy": "Privacy",
+    "styleguide": "Styleguide"
+  },
+  "actions": {
+    "requestQuote": "Request a quote",
+    "requestQuoteLong": "Request a free quote",
+    "call": "Call",
+    "callLong": "Call now",
+    "whatsapp": "WhatsApp",
+    "emergency": "Emergency",
+    "allServices": "All services",
+    "moreDetails": "Read more",
+    "backToOverview": "Back to overview",
+    "requestShort": "Enquiry"
+  },
+  "emergency": {
+    "label": "Emergency service, seven days a week",
+    "headline": "Storm damage? A leak?",
+    "body": "We come out — seven days a week. A phone call is faster than any form.",
+    "callNow": "Call now"
+  },
+  "footer": {
+    "servicesHeading": "Services",
+    "companyHeading": "Company",
+    "legalHeading": "Legal",
+    "contactHeading": "Contact",
+    "areaHeading": "Area covered",
+    "copyright": "Daach Hoffmann, Holzem",
+    "builtNotice": "Quote and call-out free of charge, anywhere in the Grand Duchy."
+  },
+  "pending": {
+    "label": "Detail missing",
+    "explanation": "The business has not supplied this yet; it will be filled in before launch."
+  },
+  "notFound": {
+    "title": "This page does not exist",
+    "body": "The link is out of date or contains a typo. The services page will get you there — or just call us.",
+    "backHome": "Go to the home page"
+  },
+  "faq": {
+    "heading": "Common questions"
+  },
+  "projects": {
+    "eyebrow": "Projects",
+    "title": "Completed work",
+    "lead": "Photographs from our own work.",
+    "marqueeNote": "Twenty-two photographs from our own jobs. Hover to pause."
+  },
+  "form": {
+    "heading": "Request a quote",
+    "lead": "The more specific, the more precise the answer. Roof type, rough area, what you have noticed — and two or three photos if you can.",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "phoneOptional": "optional, gets you an answer sooner",
+    "urgency": "How urgent is it?",
+    "service": "What is it about?",
+    "roofType": "Roof type",
+    "roofTypeOptional": "optional",
+    "postalCode": "Postcode",
+    "locality": "Town",
+    "message": "Your message",
+    "messageHint": "For example: clay tile roof, about 120 m², built 1978, water stain on an upstairs ceiling.",
+    "messagePlaceholder": "What have you noticed?",
+    "photos": "Photos of the roof",
+    "photosOptional": "optional, up to 5 images",
+    "photosHint": "A photo says more than a page of text. Images are resized automatically before upload.",
+    "photosDrop": "Choose photos or drop them here",
+    "photosRemove": "Remove",
+    "photosCount": "{count} of {max} images",
+    "photosPreparing": "Preparing …",
+    "consent": "I agree that my details may be stored in order to handle this enquiry.",
+    "consentLink": "Privacy policy",
+    "submit": "Send enquiry",
+    "submitting": "Sending …",
+    "required": "Required",
+    "emergencyHint": "With water actively coming in, a call is faster than this form. Phone:",
+    "responsePromise": "We reply within one working day.",
+    "successTitle": "Your enquiry has reached us",
+    "successBody": "You will get a confirmation email in a moment with a summary. We will reply within one working day.",
+    "successPhotos": "{count} photos received.",
+    "successAgain": "Send another enquiry",
+    "successDemo": "Note: no credentials are configured yet. The enquiry was validated but neither stored nor sent.",
+    "errorTitle": "That did not work",
+    "errorBody": "The enquiry could not be submitted. Please try again — or call us, which works in any case.",
+    "errorFields": "Please check the highlighted fields.",
+    "errors": {
+      "name": "Please tell us your name so we know how to address you.",
+      "nameLong": "That is rather long for a name field — please shorten it.",
+      "email": "Please give an email address where we can reach you.",
+      "phone": "That phone number looks too long.",
+      "urgency": "Please tell us how urgent this is — it decides how quickly we come back to you.",
+      "service": "Please pick roughly what this is about. If you are unsure, choose “Roofing”.",
+      "postalCode": "Please give the postcode so we can work out the journey.",
+      "locality": "Please give the town.",
+      "messageShort": "One or two more sentences would help us a great deal — what exactly have you noticed?",
+      "messageLong": "That is more text than we can handle here. Please shorten it, or call us.",
+      "consent": "Without your consent we are not allowed to store the enquiry.",
+      "photoType": "We cannot read that file format. JPG, PNG or WebP will work.",
+      "photoSize": "That image is too large. Please choose a smaller one.",
+      "photoMax": "We cannot accept more than {max} images."
+    },
+    "urgencyOptions": {
+      "emergency": "Emergency — water is coming in",
+      "soon": "Within the next weeks",
+      "planning": "Planning for later"
+    },
+    "roofOptions": {
+      "tile": "Tile",
+      "slate": "Slate",
+      "metal": "Metal",
+      "flat": "Flat roof",
+      "unknown": "Not sure"
+    },
+    "choose": "Please choose",
+    "mapHeading": "Getting here",
+    "mapLoad": "Load map",
+    "mapNotice": "The map is only loaded from OpenStreetMap once you click. Until then no request leaves your browser.",
+    "mapProvider": "OpenStreetMap",
+    "openInMaps": "Open in a maps app",
+    "contactHeading": "Reach us directly",
+    "hoursHeading": "Availability"
+  },
+  "region": {
+    "canton": "Canton of {canton}",
+    "typical": "Typical here:",
+    "sources": "Sources",
+    "servicesHeading": "What we do in {place}",
+    "nearby": "Neighbouring communes",
+    "cta": "The quote and the journey to {place} are free of charge."
+  },
+  "map": {
+    "workshop": "Workshop in Holzem",
+    "places": "Places we work regularly",
+    "nationwide": "We travel across the whole Grand Duchy — and the journey never costs anything, even when no job comes of it.",
+    "attribution": "Map data © OpenStreetMap"
+  },
+  "anatomy": {
+    "scrollHint": "Swipe sideways to view"
+  }
+}

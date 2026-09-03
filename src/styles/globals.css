@@ -1,0 +1,1516 @@
+@import 'tailwindcss';
+@import './tokens.css';
+
+/*
+  Base layer. Everything here is a decision the whole site depends on, so it
+  lives in one place rather than being repeated as utility classes.
+*/
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    /* Anchors and the skip link land below the sticky header, not underneath it. */
+    scroll-padding-block-start: 6rem;
+    /*
+      Horizontal overflow is clipped here rather than on <body>, and that
+      matters for more than tidiness: `overflow-x: clip` with a visible
+      overflow-y computes overflow-y to auto, which turns the element into a
+      scroll container. On <body> that quietly moves the scroller off the root,
+      and every `animation-timeline: scroll(root)` on the page then reports a
+      range of zero — the progress bar existed, was attached, and never moved.
+    */
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-surface);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  p,
+  li {
+    text-wrap: pretty;
+  }
+
+  /* German compounds are long. Allow the browser to break them rather than
+     letting "Dachrinnenreinigung" push a button off the screen. */
+  :lang(de) h1,
+  :lang(de) h2,
+  :lang(de) h3 {
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  img,
+  picture,
+  video,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  /* One visible focus treatment for the entire site. The brief rules out the
+     browser default; this one survives on both the clay and the slate surfaces
+     because it carries its own contrasting outer ring. */
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-xs);
+  }
+
+  /* Only remove the default where the replacement above is guaranteed. */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-300);
+    color: var(--color-navy-950);
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+}
+
+@layer components {
+  /*
+    The skip link is the first focusable element on every page. It is not a
+    checkbox item — a keyboard user landing on the home page would otherwise
+    tab through the entire navigation before reaching content.
+  */
+  .skip-link {
+    position: absolute;
+    inset-inline-start: var(--gutter-x);
+    inset-block-start: 0;
+    z-index: 100;
+    transform: translateY(-120%);
+    padding: 0.75rem 1.25rem;
+    background-color: var(--color-navy-900);
+    color: var(--color-clay-50);
+    font-family: var(--font-heading);
+    font-weight: 600;
+    border-end-start-radius: var(--radius-md);
+    border-end-end-radius: var(--radius-md);
+    transition: transform var(--duration-fast) var(--ease-out);
+  }
+
+  .skip-link:focus-visible {
+    transform: translateY(0);
+  }
+
+  /* Long-form text pages: measure capped, headings given room to breathe. */
+  .prose-roof {
+    max-width: var(--container-prose);
+  }
+
+  .prose-roof > * + * {
+    margin-block-start: 1.1em;
+  }
+
+  .prose-roof h2 {
+    font-size: var(--text-h2);
+    line-height: var(--text-h2--line-height);
+    letter-spacing: var(--text-h2--letter-spacing);
+    margin-block-start: 2em;
+  }
+
+  .prose-roof h3 {
+    font-size: var(--text-h3);
+    line-height: var(--text-h3--line-height);
+    letter-spacing: var(--text-h3--letter-spacing);
+    margin-block-start: 1.6em;
+  }
+
+  .prose-roof a {
+    color: var(--color-accent-text);
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent-600);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 0.2em;
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      text-decoration-color var(--duration-fast) var(--ease-out);
+  }
+
+  .prose-roof a:hover {
+    color: var(--color-red-700);
+    text-decoration-color: var(--color-red-500);
+  }
+}
+
+@layer components {
+  /*
+    Scroll reveal. The hidden state exists only once RevealRoot has run and
+    added `.reveal-ready` to <html> — without JavaScript nothing is ever
+    hidden, so the page can never end up blank because a script failed.
+
+    The movement is 14px and 620ms on an ease-out curve. Section 9.5 rules out
+    bounce and elastic; anything that draws attention to the animation itself
+    works against what this business is selling.
+  */
+  .reveal-ready [data-reveal] {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .reveal-ready [data-reveal].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--duration-reveal) var(--ease-out),
+      transform var(--duration-reveal) var(--ease-out);
+    transition-delay: calc(var(--reveal-index, 0) * 70ms);
+  }
+
+  /* A photograph that lifts very slightly under the pointer. Touch devices
+     never see it: `hover: hover` excludes them, where a hover state fires on
+     scroll and reads as a glitch. */
+  @media (hover: hover) {
+    .photo-lift img {
+      transition:
+        transform var(--duration-slow) var(--ease-out),
+        filter var(--duration-slow) var(--ease-out);
+    }
+
+    .photo-lift:hover img,
+    .group:hover .photo-lift img {
+      transform: scale(1.028);
+    }
+  }
+}
+
+
+
+
+/* -------------------------------------------------------------------------- */
+/* Scroll progress                                                            */
+/* -------------------------------------------------------------------------- */
+
+/*
+  A hairline across the top that fills as the page is read.
+  Driven by `animation-timeline: scroll()`, so it costs no JavaScript and no
+  scroll listener — the compositor runs it. Browsers without scroll-driven
+  animations simply never see it, which is why it lives inside @supports and
+  is not the only thing telling anyone where they are.
+*/
+.scroll-progress {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 60;
+  height: 3px;
+  transform-origin: left;
+  transform: scaleX(0);
+  background-color: var(--color-red-500);
+  pointer-events: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-progress {
+      animation: scroll-progress linear;
+      animation-timeline: scroll(root block);
+    }
+  }
+}
+
+@keyframes scroll-progress {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Scroll-linked settling                                                     */
+/* -------------------------------------------------------------------------- */
+
+/*
+  The hero photograph loses a little scale and light as it leaves the viewport,
+  so the first screen hands over to the second rather than simply scrolling
+  away. Tied to the element's own position in view, which means it tracks the
+  finger exactly on a trackpad and cannot drift out of sync the way a
+  listener-driven version does.
+
+  Deliberately not parallax: section 9.5 rules that out, and the difference is
+  that nothing here moves at a speed the page does not.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .scroll-settle {
+      animation: scroll-settle linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 90%;
+      will-change: transform, opacity;
+    }
+  }
+}
+
+@keyframes scroll-settle {
+  to {
+    transform: scale(0.955) translateY(-1.5rem);
+    opacity: 0.55;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Depth on the dark sections                                                 */
+/* -------------------------------------------------------------------------- */
+
+/*
+  A soft light behind the content on navy grounds.
+
+  Not a decorative gradient in the sense the brief rules out — there is no
+  colour ramp and no second hue. It is one radial fall-off of the same navy,
+  lifted a few per cent, which gives the dark bands a centre and stops them
+  reading as flat rectangles of paint.
+*/
+.section-glow {
+  position: relative;
+  isolation: isolate;
+}
+
+.section-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    /*
+      The centre light. One radial fall-off of the same navy lifted a few per
+      cent — no colour ramp, no second hue — which gives the dark band a centre
+      and stops it reading as a flat rectangle of paint.
+    */
+    radial-gradient(
+      120% 80% at 50% 0%,
+      oklch(0.34 0.055 246 / 0.85) 0%,
+      transparent 62%
+    ),
+    /* A floor shadow, so the band closes rather than just ending. The pitch
+       this layer used to carry now belongs to `.plane-dark`, so that the
+       footer is made of the same material as the bands are. */
+    linear-gradient(
+      to top,
+      oklch(0.104 0.026 251 / 0.55) 0%,
+      transparent 22%
+    );
+}
+
+/* -------------------------------------------------------------------------- */
+/* The marquee                                                                */
+/* -------------------------------------------------------------------------- */
+
+.marquee {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  overflow: hidden;
+  /* Both edges fade out, so the rows leave the frame instead of being cut. */
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 7%,
+    #000 93%,
+    transparent 100%
+  );
+}
+
+.marquee-track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 1.25rem;
+  width: max-content;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee-run var(--marquee-duration, 70s) linear infinite;
+  }
+
+  /* Stop for anyone actually looking at it. A caption sliding away while it is
+     being read is worse than no caption. */
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/*
+  Each track holds its photographs twice and moves by exactly half its own
+  width, so the second run arrives where the first began. No measurement, no
+  timer, no seam.
+*/
+@keyframes marquee-run {
+  to {
+    transform: translateX(calc(-50% - 0.625rem));
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Bars                                                                       */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/* Surface — the ground, in three tiers                                       */
+/* -------------------------------------------------------------------------- */
+
+/*
+  Why this was rebuilt.
+
+  The previous version declared its two colour washes on `body::before` and
+  its hairline texture on `.page-shell::before`. `.page-shell` *is* the body
+  element — it is the class the layout puts on <body> — so the class selector
+  outranked the type selector and the texture rule replaced the wash rule
+  outright. The sky-blue daylight the whole composition was built around never
+  painted a single pixel. What survived was one warm blob at the bottom of the
+  viewport under a flat off-white, which is exactly how the page read.
+
+  It is now three tiers, no two rules competing for the same box, ordered the
+  way light actually works: material at the bottom, light above it, content
+  above that.
+
+    tier 1 · the material — body's own background, which becomes the canvas
+             and therefore can never be painted over by anything. Warm
+             off-white, a grain, and the pitch of the logo's roofs run in two
+             directions. It scrolls with the document, because paper belongs
+             to the page rather than to the screen.
+    tier 2 · the light — two fixed layers behind everything. Daylight from the
+             top edge, the warm light tiles throw back from the bottom, and a
+             vignette down both sides so the page has a body instead of
+             bleeding into the browser chrome.
+    tier 3 · the planes — see the block below this one.
+
+  None of it is a decorative gradient in the sense section 1.3 rules out.
+  There is no hue ramp and nothing announces itself: one light source above,
+  one bounce below, a material in between. Cover the content and what is left
+  looks like a lit surface, not like a pattern.
+*/
+
+/* -- tier 1 · the material ------------------------------------------------- */
+
+body {
+  position: relative;
+  background-color: var(--color-surface);
+  /*
+    Three tiled layers, painted bottom-up in reverse source order:
+
+      · the grain, which is what stops an off-white being read as #fff;
+      · the pitch of the logo's roofs at 118°;
+      · the same pitch mirrored to 62° on a wider period, which turns a set of
+        stripes into a weave — one angle on its own reads as corduroy.
+
+    Left on the default `scroll` attachment deliberately. `fixed` would force a
+    full-viewport repaint on every scroll frame for no visual gain: a tiled
+    texture has no seam to give the trick away, and this page is ten thousand
+    pixels tall.
+  */
+  background-image:
+    var(--ground-grain),
+    repeating-linear-gradient(
+      118deg,
+      oklch(0.206 0.042 249 / 0.038) 0 1px,
+      transparent 1px 14px
+    ),
+    repeating-linear-gradient(
+      62deg,
+      oklch(0.206 0.042 249 / 0.02) 0 1px,
+      transparent 1px 25px
+    );
+}
+
+/* -- tier 2 · the light ---------------------------------------------------- */
+
+/*
+  Split by whether a layer owns an edge.
+
+  `::before` is pinned to the viewport and never moves: everything on it is
+  referenced to an edge — the top, the bottom, the two sides — and an
+  edge-referenced band is wrong the instant its edge leaves the screen.
+  `::after` carries the soft blooms, which have no edge to lose, so that one
+  is over-scaled and allowed to drift.
+*/
+.page-shell::before,
+.page-shell::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+.page-shell::before {
+  background-image:
+    /*
+      Daylight, poured from the top edge. On a roofer's site this is the one
+      wash the trade can carry without looking decorative: it is the actual
+      backdrop behind every photograph on the page.
+    */
+    linear-gradient(
+      to bottom,
+      oklch(0.790 0.088 238 / 0.30) 0%,
+      oklch(0.790 0.088 238 / 0.11) 24%,
+      transparent 46%
+    ),
+    /* The light clay tiles throw back, from the bottom edge. */
+    linear-gradient(
+      to top,
+      oklch(0.790 0.072 62 / 0.22) 0%,
+      oklch(0.790 0.072 62 / 0.075) 16%,
+      transparent 34%
+    ),
+    /*
+      A vignette down both sides. Five per cent of navy at the very edge, and
+      the whole difference between a page resting on a surface and a page
+      running out of the window.
+    */
+    linear-gradient(
+      to right,
+      oklch(0.206 0.042 249 / 0.055) 0%,
+      transparent 12%,
+      transparent 88%,
+      oklch(0.206 0.042 249 / 0.055) 100%
+    );
+}
+
+.page-shell::after {
+  /*
+    Over-scaled so the drift below never exposes an edge. The standalone
+    `scale` property rather than a transform function, so `translate` stays
+    free for the animation and the two compose instead of overwriting each
+    other — and it keeps `inset` at 0, which matters because a negative inset
+    moves the origin the gradients' percentages are measured from.
+  */
+  scale: 1.35;
+  background-image:
+    /* The sun, off the top right corner. */
+    radial-gradient(
+      50vmax 38vmax at 84% -4%,
+      oklch(0.880 0.070 96 / 0.34),
+      transparent 66%
+    ),
+    /*
+      The brand's red, once, at the far edge of perception. It is here so that
+      the top of the page is not purely blue and gold, and it is the only
+      place the red appears without an emergency attached to it — at eight per
+      cent it is a temperature, not a signal.
+    */
+    radial-gradient(
+      32vmax 28vmax at 2% 10%,
+      oklch(0.562 0.220 28 / 0.085),
+      transparent 68%
+    ),
+    /* Cool ambient, low right, so the bottom half is not warm on its own. */
+    radial-gradient(
+      40vmax 34vmax at 96% 74%,
+      oklch(0.452 0.135 250 / 0.10),
+      transparent 70%
+    );
+}
+
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .page-shell::after {
+      animation: atmosphere-drift linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+/*
+  One layer drifting, not two counter-drifting ones.
+
+  The brief rules out parallax, and two planes sliding against each other is
+  precisely what parallax looks like. A single ambient that shifts by a few per
+  cent of the viewport over ten thousand pixels of scrolling is not a plane
+  moving, it is the light changing as you walk down the page — which is what
+  "solidity over effect" leaves room for. Driven by the scroll position itself,
+  so it costs no JavaScript and tracks a thrown scrollbar exactly.
+*/
+@keyframes atmosphere-drift {
+  to {
+    translate: -3vmax -7vmax;
+  }
+}
+
+/*
+  Layered on purpose.
+
+  Tailwind v4 emits its utilities into `@layer utilities`, and unlayered CSS
+  beats any layer — so a bare `.plane { position: relative }` silently outranks
+  `lg:absolute` in the markup. That is not hypothetical: it is what took the
+  hero photograph out of its absolute position on desktop the first time these
+  rules were written outside a layer. Anything here that sets a property a
+  utility might also set — position, border-radius, box-shadow — belongs in
+  `components`, where a utility in the markup still wins.
+*/
+
+@layer components {
+  /* -------------------------------------------------------------------------- */
+  /* Planes — sections as courses of material                                   */
+  /* -------------------------------------------------------------------------- */
+
+  /*
+    Tier 3, and the other half of why the page read as flat.
+
+    Nine sections stacked as tinted rectangles butt against one another with
+    nothing at the seam, and a stack of rectangles is the definition of a flat
+    page however carefully the tints alternate. Roofing is the opposite of that.
+    It is courses of material laid over each other, and every course shows an
+    edge where the light catches it.
+
+    So each tinted section gets three things, all of them inset shadows on the
+    section itself — no wrapper, no pseudo-element, nothing to keep in sync:
+
+      · a one-pixel highlight along the top lip, where the light lands;
+      · a soft recess shadow immediately under that lip, so the plane reads as
+        set into the page rather than painted onto it;
+      · a one-pixel shade along the bottom, which is the next course's shadow.
+
+    It is worth being precise about how little this is. Nothing here exceeds six
+    per cent of navy and no reader will ever name it. What they will notice is
+    that the page has thickness.
+  */
+  .plane {
+    position: relative;
+  }
+
+  /* On the warm and cool off-whites. */
+  .plane-light {
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.7),
+      inset 0 16px 24px -20px oklch(0.206 0.042 249 / 0.34),
+      inset 0 -1px 0 oklch(0.206 0.042 249 / 0.055);
+  }
+
+  /*
+    On the navy bands, and on the footer.
+
+    The highlight is the flag's blue rather than white, which is the difference
+    between an edge and a scratch. The pitch comes with it: the light sections
+    are made of a material and the dark ones were not, which is why they were
+    the flattest surfaces on the page — a navy rectangle with nothing in it.
+    Drawn in the flag's blue, because navy on navy is invisible.
+
+    It composes rather than collides: `bg-surface-inverse` sets only a
+    background-*color*, so the pattern layers over it.
+  */
+  .plane-dark {
+    background-image: repeating-linear-gradient(
+      118deg,
+      oklch(0.815 0.070 221 / 0.05) 0 1px,
+      transparent 1px 14px
+    );
+    box-shadow:
+      inset 0 1px 0 oklch(0.815 0.070 221 / 0.15),
+      inset 0 30px 44px -34px oklch(0.104 0.026 251 / 0.85),
+      inset 0 -30px 44px -34px oklch(0.104 0.026 251 / 0.7);
+  }
+
+  /* On the emergency band. Same construction, shaded with a deep red rather
+     than navy — navy over the signal red goes muddy rather than dark. */
+  .plane-signal {
+    box-shadow:
+      inset 0 1px 0 oklch(1 0 0 / 0.17),
+      inset 0 26px 40px -32px oklch(0.240 0.100 26 / 0.8),
+      inset 0 -26px 40px -32px oklch(0.240 0.100 26 / 0.7);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* The roof line                                                              */
+/* -------------------------------------------------------------------------- */
+
+/*
+  The signature motif: the pitch from the logo, repeated as a zigzag rule.
+  Used where the page changes register — into the dark bands and into the
+  footer — so the seams between sections belong to this business rather than
+  being an arbitrary colour change.
+*/
+.roofline-divider {
+  height: 14px;
+  background-color: currentColor;
+  color: var(--color-red-500);
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='14' viewBox='0 0 56 14'%3E%3Cpath d='M0 13 L14 3 L28 13 L42 3 L56 13' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='square'/%3E%3C/svg%3E");
+  mask-repeat: repeat-x;
+  mask-size: 56px 14px;
+}
+
+.roofline-divider--accent {
+  color: var(--color-accent-500);
+}
+
+.roofline-divider--sky {
+  color: var(--color-sky-400);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Link underline                                                             */
+/* -------------------------------------------------------------------------- */
+
+/*
+  An underline that grows from the left rather than appearing all at once.
+  Drawn as a pseudo-element so it can be animated — `text-decoration` cannot —
+  and scaled rather than sized, so it costs no layout work per frame.
+*/
+.link-underline {
+  position: relative;
+}
+
+.link-underline::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.14em;
+  height: 1.5px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.link-underline:hover::after,
+.link-underline:focus-visible::after,
+.group:hover .link-underline::after {
+  transform: scaleX(1);
+}
+
+/* Touch devices fire :hover on scroll, where a growing underline reads as a
+   glitch. There the underline is simply absent. */
+@media (hover: none) {
+  .link-underline::after {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Horizontal photo strip                                                     */
+/* -------------------------------------------------------------------------- */
+
+/*
+  A run of photographs read by scrolling sideways. Snap points land each frame
+  cleanly; the scrollbar is styled rather than hidden, because a horizontal
+  region with no visible affordance is one people never discover.
+*/
+.photo-strip {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-navy-300) transparent;
+  scroll-padding-inline: var(--gutter-x);
+  /* The strip runs to the viewport edge on the right, so the last frame is
+     clipped rather than stopping short — which is what tells the eye there is
+     more to the right. */
+  padding-inline-end: 20vw;
+}
+
+.photo-strip::-webkit-scrollbar {
+  height: 8px;
+}
+
+.photo-strip::-webkit-scrollbar-track {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+.photo-strip::-webkit-scrollbar-thumb {
+  background: var(--color-navy-400);
+  border-radius: 4px;
+}
+
+.photo-strip::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent-600);
+}
+
+/*
+  The roof section drawing.
+
+  Eight labels need about 46rem before the type stops being legible, so below
+  that the drawing scrolls sideways rather than shrinking to nothing. A pane
+  that scrolls without saying so is a pane most people never scroll: the right
+  edge fades and a hint sits under it, both only while the content actually
+  overflows.
+*/
+.anatomy-figure {
+  position: relative;
+  scrollbar-width: thin;
+  overscroll-behavior-x: contain;
+}
+
+.anatomy-figure::after {
+  content: '';
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: 0;
+  width: 3.5rem;
+  pointer-events: none;
+  background-image: linear-gradient(to left, var(--color-surface-sunken), transparent);
+}
+
+@media (min-width: 52rem) {
+  .anatomy-figure::after {
+    display: none;
+  }
+}
+
+.anatomy-hint {
+  display: flex;
+}
+
+@media (min-width: 52rem) {
+  .anatomy-hint {
+    display: none;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Motion that a phone can see                                                */
+/* -------------------------------------------------------------------------- */
+
+/*
+  Hover states are invisible on a touchscreen, so every effect that only
+  answers a pointer is an effect half the visitors never get. These are driven
+  by `view()` — the element's own passage through the viewport — which means
+  the phone gets them by scrolling, which is the only gesture it has.
+
+  All of it is inside `prefers-reduced-motion: no-preference` and all of it is
+  small. Section 9.5 rules out parallax as a headline effect; a photograph that
+  settles by eight pixels over a whole screen of scrolling is not parallax, it
+  is the difference between a page that is alive and a page that is printed.
+*/
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    /* Photographs breathe very slightly as they cross. */
+    .photo-drift img {
+      animation: photo-drift linear both;
+      animation-timeline: view();
+      animation-range: entry 10% exit 90%;
+    }
+
+    /* A rule that draws itself as its section arrives. */
+    .rule-draw {
+      animation: rule-draw linear both;
+      animation-timeline: view();
+      animation-range: entry 20% cover 34%;
+    }
+
+    /*
+      Cards rise and settle. The stagger comes from the geometry rather than
+      from a delay: each card enters the viewport at its own moment, so a row
+      of three arrives as a row and a column arrives one at a time, with no
+      index to keep in sync.
+    */
+    .card-rise {
+      animation: card-rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 78%;
+    }
+  }
+}
+
+@keyframes photo-drift {
+  from {
+    scale: 1.06;
+    translate: 0 1.2%;
+  }
+  to {
+    scale: 1;
+    translate: 0 -1.2%;
+  }
+}
+
+@keyframes rule-draw {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes card-rise {
+  from {
+    opacity: 0.35;
+    translate: 0 1.5rem;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/*
+  Buttons and cards under a pointer.
+
+  One idea repeated: whatever is being pointed at moves a little towards the
+  reader and its accent widens. Restrained on purpose — this trade sells
+  solidity, and a site that bounces argues against the thing it is selling.
+*/
+@media (hover: hover) {
+  .lift {
+    transition:
+      transform var(--duration-base) var(--ease-out),
+      box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .lift:hover,
+  .group:hover .lift {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -28px oklch(0.206 0.042 249 / 0.6);
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* The navigation rail                                                        */
+/* -------------------------------------------------------------------------- */
+
+/*
+  Three destinations on a bar this wide read as three stray words. On a tinted
+  rail they read as one control, and each item then has a shape of its own to
+  answer the pointer with — where a bare text link can only change colour.
+
+  The pill grows from 88% rather than fading in flat: a shape that arrives has
+  a direction, and the direction is what makes it feel attached to the cursor
+  instead of merely switched on. The red dot is the same red as the roofs in
+  the logo and appears nowhere else in the header.
+*/
+.nav-rail {
+  padding: 0.25rem;
+  border-radius: 999px;
+  background-color: oklch(0.206 0.042 249 / 0.045);
+}
+
+.nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.25rem;
+  padding-inline: 0.95rem;
+  border-radius: 999px;
+  font-family: var(--font-heading);
+  font-size: var(--text-small);
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-out);
+  isolation: isolate;
+}
+
+.nav-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background-color: var(--color-surface);
+  box-shadow: 0 1px 2px oklch(0.206 0.042 249 / 0.1);
+  opacity: 0;
+  scale: 0.88;
+  transition:
+    opacity var(--duration-base) var(--ease-out),
+    scale var(--duration-base) var(--ease-out);
+}
+
+.nav-link__dot {
+  width: 0;
+  height: 5px;
+  border-radius: 999px;
+  background-color: var(--color-red-500);
+  transition:
+    width var(--duration-base) var(--ease-out),
+    margin-inline-end var(--duration-base) var(--ease-out);
+  margin-inline-end: -0.5rem;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--color-ink);
+}
+
+.nav-link:hover::before,
+.nav-link:focus-visible::before {
+  opacity: 1;
+  scale: 1;
+}
+
+.nav-link:hover .nav-link__dot,
+.nav-link:focus-visible .nav-link__dot {
+  width: 5px;
+  margin-inline-end: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* The header, as you scroll                                                  */
+/* -------------------------------------------------------------------------- */
+
+/*
+  The bar condenses over the first 160 pixels of the page and then holds.
+
+  Driven by the scroll position itself, not by a listener that toggles a class
+  at a threshold: the change is continuous rather than a jump at one pixel, it
+  cannot fall behind a fast scroll, and it costs no JavaScript at all. The
+  range is short on purpose — this is meant to be felt at the edge of vision
+  while reading, not watched.
+
+  `animation-range` needs the whole first 160px, so the keyframes describe the
+  *end* state only and `backwards`/`both` holds the start.
+*/
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .site-bar {
+      animation: header-tint linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 160px;
+    }
+
+    .site-header {
+      animation: header-condense linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 160px;
+    }
+
+    .site-header__mark {
+      animation: header-mark linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 160px;
+    }
+  }
+}
+
+/* Height on the inner container; tint and shadow on the full-width bar. */
+@keyframes header-condense {
+  to {
+    height: 3.85rem;
+  }
+}
+
+@keyframes header-tint {
+  to {
+    background-color: oklch(0.988 0.003 84 / 0.86);
+    box-shadow: 0 10px 30px -20px oklch(0.206 0.042 249 / 0.55);
+  }
+}
+
+@keyframes header-mark {
+  to {
+    scale: 0.86;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Mobile navigation                                                          */
+/* -------------------------------------------------------------------------- */
+
+/*
+  The panel.
+
+  A flat white sheet over a designed page looked like a different site had
+  loaded. It carries the same wash as the body so it reads as the page folding
+  open rather than as a modal arriving from nowhere.
+*/
+.mobile-panel {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(110% 60% at 88% -6%, oklch(0.769 0.08 221 / 0.2), transparent 62%),
+    linear-gradient(to bottom, oklch(0.769 0.08 221 / 0.09), transparent 34%);
+}
+
+/*
+  Rows arrive in sequence rather than all at once. Fourteen milliseconds apart
+  is below the threshold at which the delay is perceived as waiting, and above
+  the one at which the eye stops reading it as an order.
+*/
+@media (prefers-reduced-motion: no-preference) {
+  .mobile-panel:not([hidden]) .panel-row {
+    animation: panel-row-in 380ms var(--ease-out) backwards;
+    animation-delay: calc(60ms + var(--i, 0) * 34ms);
+  }
+}
+
+@keyframes panel-row-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+}
+
+/*
+  The services fold.
+
+  `::details-content` animates the open/close where it is supported and is
+  ignored where it is not, so the disclosure works everywhere and moves where
+  the browser can move it. `interpolate-size` is what lets `height: auto`
+  take part in a transition at all.
+*/
+.panel-fold summary::-webkit-details-marker {
+  display: none;
+}
+
+.panel-fold__mark {
+  transition: transform var(--duration-base) var(--ease-out);
+}
+
+.panel-fold[open] .panel-fold__mark {
+  transform: rotate(135deg);
+}
+
+@supports selector(::details-content) {
+  @media (prefers-reduced-motion: no-preference) {
+    .panel-fold::details-content {
+      overflow: hidden;
+      block-size: 0;
+      opacity: 0;
+      transition:
+        block-size var(--duration-base) var(--ease-out),
+        opacity var(--duration-base) var(--ease-out),
+        content-visibility var(--duration-base) allow-discrete;
+      interpolate-size: allow-keywords;
+    }
+
+    .panel-fold[open]::details-content {
+      block-size: auto;
+      opacity: 1;
+    }
+  }
+}
+
+/*
+  The trigger. Two bars that rotate into a cross, so the control describes its
+  own next state instead of swapping one glyph for another.
+*/
+.menu-bars {
+  display: grid;
+  gap: 5px;
+  width: 1.15rem;
+}
+
+.menu-bars > span {
+  display: block;
+  height: 2px;
+  border-radius: 1px;
+  background-color: currentColor;
+  transition:
+    transform var(--duration-base) var(--ease-out),
+    width var(--duration-base) var(--ease-out);
+}
+
+.menu-bars > span:last-child {
+  width: 70%;
+  justify-self: end;
+}
+
+.menu-trigger[data-open] .menu-bars > span:first-child {
+  transform: translateY(3.5px) rotate(45deg);
+}
+
+.menu-trigger[data-open] .menu-bars > span:last-child {
+  width: 100%;
+  transform: translateY(-3.5px) rotate(-45deg);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Long-form pages                                                            */
+/* -------------------------------------------------------------------------- */
+
+/*
+  Method, as a numbered sequence.
+
+  The service pages carry real detail and it was reading as a wall. The words
+  are the same; a rule down the left with a number against each step lets the
+  eye count them, and four things you can count feel shorter than four
+  paragraphs that all look alike. The rule is drawn on the list rather than on
+  each item so it runs unbroken through the gaps.
+*/
+.method {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.method::before {
+  content: '';
+  position: absolute;
+  inset-block: 0.6rem;
+  inset-inline-start: 1.05rem;
+  width: 1px;
+  background-color: var(--color-border);
+}
+
+.method > li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 2.1rem minmax(0, 1fr);
+  gap: 0 1.5rem;
+  padding-block: 1.15rem;
+}
+
+.method > li:first-child {
+  padding-block-start: 0;
+}
+
+.method__step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background-color: var(--color-surface);
+  box-shadow: inset 0 0 0 1px var(--color-border-strong);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-accent-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+  Material cards.
+
+  A one-pixel grid gap over a coloured background draws every separator with
+  no borders to keep aligned, and the accent bar grows on hover so a grid of
+  otherwise identical panels still answers the pointer.
+*/
+.spec-card {
+  position: relative;
+}
+
+.spec-card::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--color-red-500);
+  transition: width var(--duration-base) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .spec-card:hover::after {
+    width: 3.5rem;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* The run of places                                                          */
+/* -------------------------------------------------------------------------- */
+
+/*
+  The municipalities, as a moving line.
+
+  Same mechanism as the photo marquee: the track carries its names twice and
+  translates by half its own width, so the loop is seamless with no
+  measurement and no JavaScript. A rule runs behind the names rather than
+  under them, so it reads as a route rather than as an underline, and each
+  name sits on a plate that breaks the rule where it passes.
+*/
+.area-marquee {
+  mask-image: linear-gradient(to right, transparent 0, #000 6%, #000 94%, transparent 100%);
+}
+
+.area-run {
+  position: relative;
+  align-items: center;
+  gap: 0 2.75rem;
+  padding-block: 1.5rem;
+  margin: 0;
+  list-style: none;
+}
+
+.area-run::before {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 50%;
+  height: 2px;
+  background-color: var(--color-border-strong);
+  opacity: 0.4;
+}
+
+.area-run li {
+  position: relative;
+  flex-shrink: 0;
+  padding-inline: 0.85rem;
+  background-color: var(--color-surface);
+  font-family: var(--font-heading);
+  font-size: var(--text-h3);
+  font-weight: 700;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+/* `.area-run li` is a descendant selector and outranks a lone class, so the
+   origin has to be qualified to win the colour it is there for. */
+.area-run li.area-run__origin {
+  color: var(--color-red-700);
+}
+
+@layer components {
+  /* -------------------------------------------------------------------------- */
+  /* Photographs                                                                */
+  /* -------------------------------------------------------------------------- */
+
+  /*
+    Photographs are given an edge and a shadow rather than floating loose beside
+    the text. The hairline is the same navy as the type at eight per cent, so it
+    reads as a printed plate rather than as a border someone added.
+  */
+  .photo-plate {
+    position: relative;
+    border-radius: var(--radius-sm);
+    /*
+      Two shadows doing two different jobs: a tight one for the contact between
+      plate and paper, and a wide, offset one for the height it is held at. The
+      single mid-range shadow this replaces gave a photograph a soft grey halo,
+      which reads as a drop-shadow filter rather than as an object on a surface.
+    */
+    box-shadow:
+      0 1px 2px oklch(0.206 0.042 249 / 0.10),
+      0 18px 44px -16px oklch(0.206 0.042 249 / 0.20);
+  }
+
+  /*
+    The edge, as an overlay rather than as a ring shadow.
+
+    `.photo-plate` sits on the <picture> element and the photograph fills it, so
+    an inset box-shadow on the element itself paints under its own content and is
+    never seen. This is the hairline plus the highlight along the top lip, laid
+    over the image where they are actually visible — the same lip the section
+    planes have, so a photograph and a section are lit by the same light.
+
+    The first version of this also carried an inner shadow up from the bottom
+    edge. It read well on the navy bands and was plainly wrong everywhere
+    else: it darkened the lower third of every photograph on the site. Section
+    9.4 allows only real photographs of this business, and a real photograph
+    with a gradient laid over it to make it sit better is no longer quite one.
+  */
+  .photo-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    border-radius: inherit;
+    box-shadow:
+      inset 0 0 0 1px oklch(0.206 0.042 249 / 0.14),
+      inset 0 1px 0 oklch(1 0 0 / 0.30);
+  }
+
+  /* A short accent rule along the bottom edge, in the logo red. Small enough to
+     be a detail, consistent enough to be a signature. */
+  .photo-plate::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    /* Above the edge overlay, which is itself above the photograph. */
+    z-index: 2;
+    width: 3.5rem;
+    height: 4px;
+    background-color: var(--color-red-500);
+    transition: width var(--duration-slow) var(--ease-out);
+  }
+
+  @media (hover: hover) {
+    .group:hover .photo-plate::after,
+    .photo-plate:hover::after {
+      width: 8rem;
+    }
+  }
+
+  /* ------------------------------------------------------------------------ */
+  /* The lead photograph                                                      */
+  /* ------------------------------------------------------------------------ */
+
+  /*
+    `.hero-media` marks the one photograph a page leads with, and it goes on the
+    *wrapper* rather than on the picture itself — <Photo> renders a <picture>
+    with `overflow: hidden`, so anything offset outside that box is clipped
+    away. That is very likely why the composition described below was never
+    built: the class was applied in three views and had no rule anywhere in
+    this file, and in the hero it sat on the clipped element.
+
+    Section 1.3 rules out the centred-text-over-a-darkened-full-bleed-photo
+    hero, and the answer the Hero component commits to in its own docstring is
+    a layered one: "a navy plate offset behind the top-left corner", so the
+    picture reads as something placed on the page rather than something dropped
+    next to the text. This is that plate.
+
+    `isolation` is not decoration here. The plate sits at z-index -1 so the
+    photograph covers all but its two visible edges; without a stacking context
+    on the wrapper, that negative index would send it behind the section's own
+    background instead, and on the tinted sections it would simply vanish.
+  */
+  .hero-media {
+    position: relative;
+    isolation: isolate;
+  }
+
+  .hero-media::before {
+    content: '';
+    position: absolute;
+    z-index: -1;
+    inset-block-start: -0.75rem;
+    inset-inline-start: -0.75rem;
+    /* Along a little over half of each edge: far enough to read as a plate the
+       photograph is mounted on, short enough never to become a second frame. */
+    width: min(56%, 22rem);
+    height: min(52%, 17rem);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-navy-900);
+  }
+
+  /* The page gutter bottoms out at 20px, so a 12px offset does stay on screen
+     — but it leaves 8px, which is close enough to the bezel to read as a
+     mistake rather than as a decision. Half the offset on a phone. */
+  @media (max-width: 40rem) {
+    .hero-media::before {
+      inset-block-start: -0.4375rem;
+      inset-inline-start: -0.4375rem;
+    }
+  }
+
+  /* Held higher off the paper than an ordinary plate, and the red rule long
+     enough to read as a structural line rather than as a detail. */
+  .hero-media .photo-plate {
+    box-shadow:
+      0 1px 2px oklch(0.206 0.042 249 / 0.12),
+      0 32px 64px -24px oklch(0.206 0.042 249 / 0.28);
+  }
+
+  .hero-media .photo-plate::after {
+    width: 7rem;
+    height: 5px;
+  }
+
+  @media (hover: hover) {
+    .hero-media:hover .photo-plate::after,
+    .hero-media .group:hover .photo-plate::after {
+      width: 13rem;
+    }
+  }
+
+  /*
+    The one exception, and the reason it is a modifier rather than a guess.
+
+    The desktop hero runs its photograph off the right edge of the screen and
+    over the full height of the section, so it has no top-left corner to be
+    mounted on: the offset plate showed up there as a stray navy bar floating
+    beside the headline. What the picture has instead, at that size, is one
+    edge that meets the page — so the plate is drawn as its binding edge,
+    flush and full height, at z-index 1 because a flush edge at -1 would sit
+    behind the photograph it is meant to bind.
+  */
+  @media (min-width: 64rem) {
+    .hero-media--bleed::before {
+      z-index: 1;
+      inset-block: 0;
+      inset-inline-start: 0;
+      width: 4px;
+      height: auto;
+      border-radius: 0;
+    }
+  }
+}
+
+@keyframes panel-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Visible to screen readers, invisible on screen. Used for the "current
+     language" state and for context that sighted users get from layout. */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border-width: 0;
+  }
+}
+
+/*
+  Reduced motion. Section 9.5 allows no exception, so this is a blanket
+  override rather than a per-component opt-out: anything that animates has to
+  survive being switched off. Transitions are collapsed rather than removed so
+  that state changes still complete and focus never lands on a mid-transition
+  element.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Windows high-contrast mode: keep the focus ring, which forced-colors would
+   otherwise flatten into the surrounding text colour. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 3px solid CanvasText;
+  }
+}

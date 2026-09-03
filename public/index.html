@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="mul">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daach Hoffmann — Dachdecker Luxemburg / Couvreur Luxembourg</title>
+    <meta
+      name="description"
+      content="Daach Hoffmann, Dachdecker aus Holzem für ganz Luxemburg. Sprache wählen: Deutsch, Français, English."
+    />
+
+    <!--
+      The language gateway.
+
+      Section 8 asks for Accept-Language detection on a visitor's first arrival
+      and a cookie afterwards. A static host runs no middleware and cannot read
+      the header, so detection happens here instead, in about forty lines of
+      dependency-free script, and the answer is stored in the same NEXT_LOCALE
+      cookie next-intl would have written.
+
+      Every path below is relative, so this file works unchanged whether the
+      site is served from daach-hoffmann.lu or from a GitHub Pages sub-path.
+
+      Without JavaScript it stays a usable page: three large links, no layout
+      shift, nothing hidden. That is also what a crawler sees, which is why
+      this URL is the x-default target rather than the German home page.
+    -->
+    <link rel="canonical" href="./" />
+    <link rel="alternate" hreflang="de" href="de/" />
+    <link rel="alternate" hreflang="fr" href="fr/" />
+    <link rel="alternate" hreflang="en" href="en/" />
+    <link rel="alternate" hreflang="x-default" href="./" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#15191d" />
+
+    <style>
+      /*
+        This page is in view for a few hundred milliseconds and carries almost
+        no type, so it does not load the brand faces — pulling 75 KB of
+        Bricolage Grotesque to render three link labels would delay the very
+        redirect this page exists to perform. Every other page in the site uses
+        the self-hosted brand faces.
+      */
+      :root {
+        --navy-900: oklch(0.218 0.015 251);
+        --navy-600: oklch(0.448 0.018 245);
+        --clay-50: oklch(0.983 0.004 79);
+        --accent-500: oklch(0.63 0.108 54);
+        --border: oklch(0.885 0.008 240);
+      }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; }
+      body {
+        margin: 0;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        background: var(--clay-50);
+        color: var(--navy-900);
+        font-family: ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      main { width: 100%; max-width: 26rem; }
+      .mark { display: flex; align-items: center; gap: 0.7rem; }
+      .mark svg { width: 2rem; height: auto; overflow: visible; }
+      .mark { margin: 0; font-size: inherit; font-weight: inherit; }
+      .mark span { font-size: 1.35rem; font-weight: 700; letter-spacing: -0.03em; }
+      p { margin: 1.5rem 0 1.75rem; color: var(--navy-600); font-size: 0.95rem; }
+      ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; }
+      a {
+        display: flex; align-items: center; justify-content: space-between;
+        min-height: 3.5rem; padding: 0 1.25rem;
+        border: 1px solid var(--border); border-radius: 0.25rem;
+        background: #fff; color: inherit; text-decoration: none;
+        font-weight: 600; letter-spacing: -0.005em;
+        transition: border-color 160ms cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      a:hover { border-color: var(--navy-900); }
+      a:focus-visible { outline: 2px solid oklch(0.64 0.15 236); outline-offset: 2px; }
+      a small { color: var(--navy-600); font-weight: 500; font-size: 0.8125rem; letter-spacing: 0.08em; text-transform: uppercase; }
+      @media (prefers-reduced-motion: reduce) { a { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1 class="mark">
+        <svg viewBox="0 0 32 20" fill="none" aria-hidden="true">
+          <path d="M1 18.5 16 2.5 31 18.5" stroke="currentColor" stroke-width="2.75" stroke-linecap="square" />
+          <path d="M16 2.5 16 18.5" stroke="var(--accent-500)" stroke-width="2.75" stroke-linecap="square" />
+        </svg>
+        <span>Daach Hoffmann</span>
+      </h1>
+
+      <p lang="de">
+        Dachdecker aus Holzem, für ganz Luxemburg.
+        <span lang="fr">Couvreur à Holzem, pour tout le Luxembourg.</span>
+      </p>
+
+      <ul>
+        <li><a href="de/" hreflang="de" lang="de">Deutsch <small>DE</small></a></li>
+        <li><a href="fr/" hreflang="fr" lang="fr">Français <small>FR</small></a></li>
+        <li><a href="en/" hreflang="en" lang="en">English <small>EN</small></a></li>
+      </ul>
+    </main>
+
+    <script>
+      (function () {
+        var SUPPORTED = ['de', 'fr', 'en'];
+        var FALLBACK = 'de';
+
+        function fromCookie() {
+          var match = document.cookie.match(/(?:^|;\s*)NEXT_LOCALE=([^;]+)/);
+          if (!match) return null;
+          var value = decodeURIComponent(match[1]);
+          return SUPPORTED.indexOf(value) === -1 ? null : value;
+        }
+
+        function fromBrowser() {
+          var preferred = navigator.languages && navigator.languages.length
+            ? navigator.languages
+            : [navigator.language];
+
+          for (var i = 0; i < preferred.length; i++) {
+            if (!preferred[i]) continue;
+            var base = String(preferred[i]).toLowerCase().split('-')[0];
+            // Luxembourgish is not translated yet. German is the closest of
+            // the three we do have, and it is what a Luxembourgish speaker in
+            // this canton is most likely to read comfortably.
+            if (base === 'lb') return 'de';
+            if (SUPPORTED.indexOf(base) !== -1) return base;
+          }
+          return null;
+        }
+
+        var target = fromCookie() || fromBrowser() || FALLBACK;
+
+        try {
+          document.cookie =
+            'NEXT_LOCALE=' + target + '; path=/; max-age=' + 60 * 60 * 24 * 365 + '; SameSite=Lax';
+        } catch (error) {
+          // A blocked cookie costs the visitor one extra detection next time.
+          // It must never cost them the redirect.
+        }
+
+        // `replace` keeps the gateway out of the back-button history, so
+        // "back" from a service page returns to where the visitor came from
+        // rather than bouncing them through the redirect again.
+        location.replace(target + '/');
+      })();
+    </script>
+  </body>
+</html>

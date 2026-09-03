@@ -1,0 +1,269 @@
+/*
+  Design tokens — the single source of visual truth.
+
+  The palette is taken from the roof itself rather than from a trade cliché:
+  slate, zinc, copper, clay. Four rules from section 1.3 of the brief are
+  enforced here rather than left to discipline downstream:
+
+    · no pure black and no pure grey — every neutral is tinted;
+    · no decorative gradients of any kind;
+    · the signal colour belongs to the emergency path and nothing else;
+    · surfaces are warm off-white, never #fff.
+
+  Colours are OKLCH so that a ramp keeps its perceived lightness across hues.
+  Contrast pairings are verified by `npm run check:contrast`, which fails on
+  anything under WCAG 2.2 AA rather than trusting the eye.
+*/
+
+/*
+  `static` rather than a bare `@theme`: Tailwind v4 otherwise emits only the
+  theme variables some utility class happens to reference, and silently drops
+  the rest. Any token read through `var(--color-…)` — an inline style, a
+  hand-written CSS rule, an SVG fill — would then resolve to nothing and
+  render as transparent. A token file that is the source of visual truth has
+  to contain every token, whether or not a utility currently uses it.
+*/
+@theme static {
+  /* ---------------------------------------------------------------------- */
+  /* Navy — the base, taken from the logo's lettering (#184860, #183048).    */
+  /* Every dark surface on the site is this, not a neutral grey.             */
+  /* ---------------------------------------------------------------------- */
+  --color-navy-50: oklch(0.963 0.006 242);
+  --color-navy-100: oklch(0.922 0.013 242);
+  --color-navy-200: oklch(0.855 0.022 242);
+  --color-navy-300: oklch(0.752 0.032 243);
+  --color-navy-400: oklch(0.638 0.042 243);
+  --color-navy-500: oklch(0.528 0.050 244);
+  --color-navy-600: oklch(0.428 0.054 245);
+  --color-navy-700: oklch(0.342 0.055 246);
+  --color-navy-800: oklch(0.266 0.050 248);
+  --color-navy-900: oklch(0.206 0.042 249);
+  --color-navy-950: oklch(0.156 0.032 251);
+
+  /* ---------------------------------------------------------------------- */
+  /* Clay — warm off-white. The paper this site is printed on.               */
+  /* ---------------------------------------------------------------------- */
+  --color-clay-50: oklch(0.982 0.004 84);
+  --color-clay-100: oklch(0.960 0.007 82);
+  --color-clay-200: oklch(0.924 0.010 80);
+  --color-clay-300: oklch(0.881 0.013 78);
+
+  /* ---------------------------------------------------------------------- */
+  /* Accent — the blue of the logo's script, pushed to carry interface work. */
+  /* Links, primary actions, eyebrows.                                       */
+  /* ---------------------------------------------------------------------- */
+  --color-accent-300: oklch(0.760 0.075 246);
+  --color-accent-400: oklch(0.630 0.110 248);
+  --color-accent-500: oklch(0.530 0.130 249);
+  --color-accent-600: oklch(0.452 0.135 250);
+  --color-accent-700: oklch(0.385 0.120 250);
+  --color-accent-800: oklch(0.315 0.098 251);
+
+  /* ---------------------------------------------------------------------- */
+  /* Sky — the pale blue of the flag in the logo. Used only on navy grounds, */
+  /* where the accent blue would disappear into the surface.                 */
+  /* ---------------------------------------------------------------------- */
+  --color-sky-200: oklch(0.868 0.058 222);
+  --color-sky-300: oklch(0.815 0.070 221);
+  --color-sky-400: oklch(0.769 0.080 221);
+
+  /* ---------------------------------------------------------------------- */
+  /* Red — the roofs in the logo (#d81818), and the emergency path.          */
+  /* It is the brand's loudest colour, so it is spent only where urgency is  */
+  /* real: the emergency band, the emergency service, and form errors.       */
+  /* ---------------------------------------------------------------------- */
+  --color-red-300: oklch(0.790 0.100 26);
+  --color-red-400: oklch(0.665 0.170 27);
+  --color-red-500: oklch(0.562 0.220 28);
+  --color-red-600: oklch(0.478 0.196 27);
+  --color-red-700: oklch(0.410 0.166 26);
+  --color-red-800: oklch(0.340 0.132 25);
+
+  /* Moss — used only for confirmations and the "done" state of the process. */
+  --color-moss-500: oklch(0.560 0.095 148);
+  --color-moss-600: oklch(0.470 0.090 148);
+  --color-moss-100: oklch(0.940 0.025 148);
+
+  /* ---------------------------------------------------------------------- */
+  /* Semantic layer. Components reference these, never the ramps above.      */
+  /* ---------------------------------------------------------------------- */
+  /*
+    Four surfaces rather than two.
+
+    A single warm off-white across eight sections reads as beige wallpaper —
+    the page needs somewhere to breathe between the dark bands. `sunken` is
+    now cooled toward the logo's navy instead of warmed toward clay, and
+    `tint` is a pale wash of the flag blue, so the light sections alternate
+    between warm and cool rather than repeating one note.
+  */
+  --color-surface: oklch(0.988 0.003 84);
+  --color-surface-raised: oklch(1 0 0);
+  --color-surface-sunken: oklch(0.952 0.006 240);
+  --color-surface-tint: oklch(0.958 0.017 232);
+  --color-surface-inverse: var(--color-navy-900);
+  --color-surface-inverse-raised: var(--color-navy-800);
+
+  --color-ink: var(--color-navy-900);
+  --color-ink-muted: var(--color-navy-600);
+  --color-ink-subtle: var(--color-navy-500);
+  --color-ink-inverse: var(--color-clay-100);
+  --color-ink-inverse-muted: var(--color-navy-300);
+
+  /* Split on purpose: the fill passes 3:1 as a large element, the text token
+     is dark enough to pass 4.5:1 as body copy. Using one value for both is how
+     accent links end up failing an audit. */
+  --color-accent: var(--color-accent-600);
+  --color-accent-hover: var(--color-accent-700);
+  --color-accent-text: var(--color-accent-700);
+  --color-on-accent: var(--color-clay-50);
+
+  --color-signal: var(--color-red-600);
+  --color-signal-hover: var(--color-red-700);
+  --color-on-signal: var(--color-clay-50);
+
+  /* Hairline dividers. Decorative separation only. */
+  --color-border: oklch(0.888 0.010 242);
+  /* The boundary of an interactive component: input fields, the secondary
+     button, the select. WCAG 2.2 SC 1.4.11 requires 3:1 against the adjacent
+     surface. Verified by `npm run check:contrast`. */
+  --color-border-strong: oklch(0.588 0.038 245);
+  --color-border-inverse: oklch(0.330 0.048 247);
+
+  /* A hue used by nothing else, so a focus ring is never mistaken for state.
+     With a blue accent and a red signal, that leaves the warm side free. */
+  --color-focus: oklch(0.660 0.150 62);
+
+  /* ---------------------------------------------------------------------- */
+  /* Typography                                                             */
+  /* ---------------------------------------------------------------------- */
+  /* `--ff-*` are injected by next/font/local on the <html> element. Keeping
+     the raw family in its own variable avoids a circular reference here. */
+  --font-heading: var(--ff-heading), 'Helvetica Neue', Helvetica, sans-serif;
+  --font-body: var(--ff-body), 'Helvetica Neue', Helvetica, sans-serif;
+
+  /* Fluid scale. The jump from --text-display to --text-body is deliberately
+     large: the incumbent site has no hierarchy at all, which section 3.5 names
+     as its most visible failure. */
+  --text-display: clamp(2.75rem, 1.55rem + 5.4vw, 5.5rem);
+  --text-display--line-height: 0.94;
+  --text-display--letter-spacing: -0.032em;
+
+  --text-h1: clamp(2.125rem, 1.4rem + 3.3vw, 3.875rem);
+  --text-h1--line-height: 1.02;
+  --text-h1--letter-spacing: -0.026em;
+
+  --text-h2: clamp(1.6875rem, 1.28rem + 1.85vw, 2.625rem);
+  --text-h2--line-height: 1.1;
+  --text-h2--letter-spacing: -0.02em;
+
+  --text-h3: clamp(1.3125rem, 1.14rem + 0.8vw, 1.75rem);
+  --text-h3--line-height: 1.24;
+  --text-h3--letter-spacing: -0.012em;
+
+  --text-h4: clamp(1.0625rem, 1.01rem + 0.28vw, 1.25rem);
+  --text-h4--line-height: 1.35;
+  --text-h4--letter-spacing: -0.004em;
+
+  --text-lead: clamp(1.125rem, 1.05rem + 0.34vw, 1.3125rem);
+  --text-lead--line-height: 1.55;
+
+  --text-body: clamp(1rem, 0.975rem + 0.11vw, 1.0625rem);
+  --text-body--line-height: 1.62;
+
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.55;
+
+  /* Uppercase eyebrows and labels. Tracked out, never below 13px. */
+  --text-micro: 0.8125rem;
+  --text-micro--line-height: 1.35;
+  --text-micro--letter-spacing: 0.09em;
+
+  /* ---------------------------------------------------------------------- */
+  /* Space and rhythm                                                       */
+  /* ---------------------------------------------------------------------- */
+  /* Section rhythm and the page gutter are deliberately NOT declared in the
+     `--spacing-*` namespace. Tailwind v4 derives every numeric spacing
+     utility from the single bare `--spacing` value, and adding named keys to
+     that namespace switches it to a keyed scale — which silently drops `p-4`,
+     `h-16`, `mt-12` and every other numeric utility to zero. They live in
+     :root below instead and are used as `py-[var(--section-y)]`. */
+
+  --container-prose: 68ch;
+  --container-content: 78rem;
+  --container-wide: 96rem;
+
+  /* ---------------------------------------------------------------------- */
+  /* Radii — restrained. Nothing here is a pill except the mobile action bar. */
+  /* ---------------------------------------------------------------------- */
+  --radius-xs: 0.125rem;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+
+  /* ---------------------------------------------------------------------- */
+  /* Elevation — tinted with the slate hue. A pure-black shadow on a warm     */
+  /* surface reads as dirt.                                                  */
+  /* ---------------------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px oklch(0.22 0.015 251 / 0.06), 0 1px 1px oklch(0.22 0.015 251 / 0.04);
+  --shadow-md: 0 2px 4px oklch(0.22 0.015 251 / 0.05), 0 6px 12px oklch(0.22 0.015 251 / 0.07);
+  --shadow-lg: 0 4px 8px oklch(0.22 0.015 251 / 0.05), 0 16px 32px oklch(0.22 0.015 251 / 0.09);
+  --shadow-bar: 0 -1px 0 oklch(0.22 0.015 251 / 0.08), 0 -8px 24px oklch(0.22 0.015 251 / 0.10);
+
+  /* ---------------------------------------------------------------------- */
+  /* Motion. Section 9.5: enter with ease-out, exit with ease-in, and no      */
+  /* bounce or elastic anywhere — they read as dated and undercut the one     */
+  /* quality this business sells, which is solidity.                          */
+  /* ---------------------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Tailwind v4 reads `--transition-duration-*` for its `duration-*`
+     utilities, so `duration-fast` works in markup while the plain
+     `--duration-*` aliases stay available to hand-written CSS. */
+  --transition-duration-instant: 90ms;
+  --transition-duration-fast: 160ms;
+  --transition-duration-base: 240ms;
+  --transition-duration-slow: 380ms;
+  --transition-duration-reveal: 620ms;
+
+  --duration-instant: 90ms;
+  --duration-fast: 160ms;
+  --duration-base: 240ms;
+  --duration-slow: 380ms;
+  --duration-reveal: 620ms;
+}
+
+/*
+  Layout rhythm. Plain custom properties rather than theme tokens — see the
+  note in the typography block above for why these must stay out of the
+  `--spacing-*` namespace.
+*/
+:root {
+  /*
+    The grain.
+    ------------------------------------------------------------------------
+    One tiled tile of fractal noise, monochrome, drawn once by the browser and
+    reused for the life of the page. It is the cheapest and by far the most
+    effective of the ground layers: an off-white with no grain in it is read as
+    #fff no matter what its coordinates say, and #fff is the surface the brief
+    rules out in section 1.3.
+
+    Kept here as a token rather than inline in `body` because it is a material
+    decision, not a layout one, and because the opacity baked into the rect is
+    the one number worth tuning in isolation.
+  */
+  --ground-grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.26'/%3E%3C/svg%3E");
+
+  /*
+    Steeper than it looks. The floor was 4.5rem, which on a 375px screen meant
+    144px of nothing between every two sections — nine sections' worth, a
+    screen and a half of scrolling spent on air. The slope is raised so the
+    desktop end lands where it always did while the phone end comes down to a
+    breath rather than a gap.
+  */
+  --section-y: clamp(3.25rem, 1.4rem + 7.5vw, 9rem);
+  --section-y-tight: clamp(2.25rem, 1rem + 4.4vw, 5.5rem);
+  --gutter-x: clamp(1.25rem, 0.9rem + 1.6vw, 2.5rem);
+}

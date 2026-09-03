@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "siteName": "Daach Hoffmann",
+    "tagline": "Couvreur à Holzem — pour tout le Luxembourg",
+    "localeName": "Français",
+    "localeNameShort": "FR"
+  },
+  "a11y": {
+    "skipToContent": "Aller directement au contenu",
+    "mainNavigation": "Navigation principale",
+    "footerNavigation": "Navigation du pied de page",
+    "languageSwitcher": "Choisir la langue",
+    "currentLanguage": "Langue actuelle",
+    "menu": "Menu",
+    "openMenu": "Ouvrir le menu",
+    "closeMenu": "Fermer le menu",
+    "quickActions": "Accès rapide : appeler, WhatsApp, demande",
+    "breadcrumb": "Fil d’Ariane",
+    "anatomyHint": "Les flèches changent de couche."
+  },
+  "nav": {
+    "home": "Accueil",
+    "services": "Prestations",
+    "projects": "Réalisations",
+    "about": "À propos",
+    "process": "Déroulement",
+    "regions": "Zone d'intervention",
+    "contact": "Contact",
+    "legal": "Mentions légales",
+    "privacy": "Protection des données",
+    "styleguide": "Styleguide"
+  },
+  "actions": {
+    "requestQuote": "Demander un devis",
+    "requestQuoteLong": "Demander un devis gratuit",
+    "call": "Appeler",
+    "callLong": "Appeler maintenant",
+    "whatsapp": "WhatsApp",
+    "emergency": "Dépannage",
+    "allServices": "Toutes les prestations",
+    "moreDetails": "En savoir plus",
+    "backToOverview": "Retour à l'aperçu",
+    "requestShort": "Devis"
+  },
+  "emergency": {
+    "label": "Dépannage 7 jours sur 7",
+    "headline": "Dégât de tempête ? Une fuite ?",
+    "body": "Nous intervenons — 7 jours sur 7. Un appel va plus vite que n'importe quel formulaire.",
+    "callNow": "Appeler maintenant"
+  },
+  "footer": {
+    "servicesHeading": "Prestations",
+    "companyHeading": "Entreprise",
+    "legalHeading": "Informations légales",
+    "contactHeading": "Contact",
+    "areaHeading": "Zone d'intervention",
+    "copyright": "Daach Hoffmann, Holzem",
+    "builtNotice": "Devis et déplacement gratuits, dans tout le Grand-Duché."
+  },
+  "pending": {
+    "label": "Information manquante",
+    "explanation": "Cette information n'a pas encore été fournie par l'entreprise et sera complétée avant la mise en ligne."
+  },
+  "notFound": {
+    "title": "Cette page n'existe pas",
+    "body": "Le lien est obsolète ou contient une faute de frappe. Les prestations vous mèneront au bon endroit — ou appelez-nous directement.",
+    "backHome": "Vers l'accueil"
+  },
+  "faq": {
+    "heading": "Questions fréquentes"
+  },
+  "projects": {
+    "eyebrow": "Réalisations",
+    "title": "Chantiers réalisés",
+    "lead": "Photos de nos propres chantiers.",
+    "marqueeNote": "Vingt-deux prises de vue de nos chantiers. Survolez pour mettre en pause."
+  },
+  "form": {
+    "heading": "Demander un devis",
+    "lead": "Plus la demande est précise, plus la réponse l’est. Type de toiture, surface approximative, ce que vous avez remarqué — et si possible deux ou trois photos.",
+    "name": "Nom",
+    "email": "E-mail",
+    "phone": "Téléphone",
+    "phoneOptional": "facultatif, accélère la réponse",
+    "urgency": "Quel est le degré d’urgence ?",
+    "service": "De quoi s’agit-il ?",
+    "roofType": "Type de toiture",
+    "roofTypeOptional": "facultatif",
+    "postalCode": "Code postal",
+    "locality": "Localité",
+    "message": "Votre message",
+    "messageHint": "Par exemple : toiture en tuiles, environ 120 m², construite en 1978, auréole au plafond de l’étage.",
+    "messagePlaceholder": "Qu’avez-vous remarqué ?",
+    "photos": "Photos de la toiture",
+    "photosOptional": "facultatif, jusqu’à 5 images",
+    "photosHint": "Une photo en dit plus qu’une page de texte. Les images sont automatiquement réduites avant l’envoi.",
+    "photosDrop": "Choisir des photos ou les déposer ici",
+    "photosRemove": "Retirer",
+    "photosCount": "{count} image(s) sur {max}",
+    "photosPreparing": "Préparation …",
+    "consent": "J’accepte que mes données soient enregistrées pour le traitement de cette demande.",
+    "consentLink": "Protection des données",
+    "submit": "Envoyer la demande",
+    "submitting": "Envoi en cours …",
+    "required": "Champ obligatoire",
+    "emergencyHint": "En cas d’infiltration active, un appel va plus vite que ce formulaire. Appelez :",
+    "responsePromise": "Nous vous répondons sous un jour ouvrable.",
+    "successTitle": "Votre demande nous est parvenue",
+    "successBody": "Vous recevez dans un instant un courriel de confirmation avec un récapitulatif. Nous vous répondons sous un jour ouvrable.",
+    "successPhotos": "{count} photo(s) reçue(s).",
+    "successAgain": "Faire une autre demande",
+    "successDemo": "Remarque : aucun accès n’est encore configuré. La demande a été vérifiée, mais ni enregistrée ni envoyée.",
+    "errorTitle": "Cela n’a pas fonctionné",
+    "errorBody": "La demande n’a pas pu être transmise. Réessayez, ou appelez-nous — cela fonctionne dans tous les cas.",
+    "errorFields": "Veuillez vérifier les champs signalés.",
+    "errors": {
+      "name": "Indiquez-nous votre nom, afin que nous puissions nous adresser à vous.",
+      "nameLong": "C’est un peu long pour un champ nom — merci de raccourcir.",
+      "email": "Indiquez une adresse e-mail à laquelle nous pouvons vous joindre.",
+      "phone": "Ce numéro de téléphone semble trop long.",
+      "urgency": "Dites-nous le degré d’urgence — cela détermine notre délai de réponse.",
+      "service": "Choisissez de quoi il s’agit approximativement. En cas de doute, prenez « Couverture ».",
+      "postalCode": "Indiquez le code postal, pour que nous puissions estimer le déplacement.",
+      "locality": "Indiquez la localité.",
+      "messageShort": "Une ou deux phrases de plus nous aident beaucoup — qu’avez-vous constaté exactement ?",
+      "messageLong": "C’est plus de texte que nous ne pouvons traiter ici. Raccourcissez, ou appelez-nous.",
+      "consent": "Sans votre accord, nous ne pouvons malheureusement pas enregistrer la demande.",
+      "photoType": "Nous ne pouvons pas lire ce format. JPG, PNG ou WebP fonctionnent.",
+      "photoSize": "Cette image est trop volumineuse. Choisissez-en une plus petite.",
+      "photoMax": "Nous ne pouvons pas accepter plus de {max} images."
+    },
+    "urgencyOptions": {
+      "emergency": "Urgence — il y a de l’eau",
+      "soon": "Dans les prochaines semaines",
+      "planning": "Je planifie pour plus tard"
+    },
+    "roofOptions": {
+      "tile": "Tuiles",
+      "slate": "Ardoise",
+      "metal": "Tôle",
+      "flat": "Toit plat",
+      "unknown": "Je ne sais pas"
+    },
+    "choose": "Veuillez choisir",
+    "mapHeading": "Accès",
+    "mapLoad": "Charger la carte",
+    "mapNotice": "La carte n’est chargée depuis OpenStreetMap qu’après un clic. Avant cela, aucune requête ne quitte votre navigateur.",
+    "mapProvider": "OpenStreetMap",
+    "openInMaps": "Ouvrir dans une application de cartes",
+    "contactHeading": "Nous joindre directement",
+    "hoursHeading": "Disponibilité"
+  },
+  "region": {
+    "canton": "Canton de {canton}",
+    "typical": "Typique ici :",
+    "sources": "Sources",
+    "servicesHeading": "Nos prestations à {place}",
+    "nearby": "Communes voisines",
+    "cta": "Le devis et le déplacement à {place} sont gratuits."
+  },
+  "map": {
+    "workshop": "Entreprise à Holzem",
+    "places": "Communes desservies régulièrement",
+    "nationwide": "Nous nous déplaçons dans tout le Grand-Duché — et le déplacement ne coûte jamais rien, même sans chantier à la clé.",
+    "attribution": "Fond de carte © OpenStreetMap"
+  },
+  "anatomy": {
+    "scrollHint": "Faites glisser horizontalement"
+  }
+}

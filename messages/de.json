@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "siteName": "Daach Hoffmann",
+    "tagline": "Dachdecker aus Holzem — für ganz Luxemburg",
+    "localeName": "Deutsch",
+    "localeNameShort": "DE"
+  },
+  "a11y": {
+    "skipToContent": "Direkt zum Inhalt",
+    "mainNavigation": "Hauptnavigation",
+    "footerNavigation": "Fusszeilen-Navigation",
+    "languageSwitcher": "Sprache wählen",
+    "currentLanguage": "Aktuelle Sprache",
+    "menu": "Menü",
+    "openMenu": "Menü öffnen",
+    "closeMenu": "Menü schliessen",
+    "quickActions": "Schnellzugriff: anrufen, WhatsApp, Anfrage",
+    "breadcrumb": "Sie sind hier",
+    "anatomyHint": "Pfeiltasten wechseln die Schicht."
+  },
+  "nav": {
+    "home": "Startseite",
+    "services": "Leistungen",
+    "projects": "Referenzen",
+    "about": "Über uns",
+    "process": "Ablauf",
+    "regions": "Einsatzgebiet",
+    "contact": "Kontakt",
+    "legal": "Impressum",
+    "privacy": "Datenschutz",
+    "styleguide": "Styleguide"
+  },
+  "actions": {
+    "requestQuote": "Anfrage stellen",
+    "requestQuoteLong": "Kostenlose Anfrage stellen",
+    "call": "Anrufen",
+    "callLong": "Jetzt anrufen",
+    "whatsapp": "WhatsApp",
+    "emergency": "Notdienst",
+    "allServices": "Alle Leistungen",
+    "moreDetails": "Mehr erfahren",
+    "backToOverview": "Zurück zur Übersicht",
+    "requestShort": "Anfrage"
+  },
+  "emergency": {
+    "label": "Notdienst 7 Tage die Woche",
+    "headline": "Sturmschaden? Undichte Stelle?",
+    "body": "Wir kommen — 7 Tage die Woche. Ein Anruf geht schneller als jedes Formular.",
+    "callNow": "Jetzt anrufen"
+  },
+  "footer": {
+    "servicesHeading": "Leistungen",
+    "companyHeading": "Betrieb",
+    "legalHeading": "Rechtliches",
+    "contactHeading": "Kontakt",
+    "areaHeading": "Einsatzgebiet",
+    "copyright": "Daach Hoffmann, Holzem",
+    "builtNotice": "Kostenvoranschlag und Anfahrt kostenlos, im ganzen Grossherzogtum."
+  },
+  "pending": {
+    "label": "Angabe fehlt",
+    "explanation": "Diese Angabe liegt noch nicht vom Betrieb vor und wird vor dem Launch ergänzt."
+  },
+  "notFound": {
+    "title": "Diese Seite gibt es nicht",
+    "body": "Der Link ist veraltet oder enthält einen Tippfehler. Über die Leistungen kommen Sie ans Ziel — oder rufen Sie direkt an.",
+    "backHome": "Zur Startseite"
+  },
+  "faq": {
+    "heading": "Häufige Fragen"
+  },
+  "projects": {
+    "eyebrow": "Referenzen",
+    "title": "Ausgeführte Arbeiten",
+    "lead": "Fotos aus dem eigenen Betrieb.",
+    "marqueeNote": "Zweiundzwanzig Aufnahmen aus dem Betrieb. Zum Anhalten mit der Maus darüberfahren."
+  },
+  "form": {
+    "heading": "Anfrage stellen",
+    "lead": "Je konkreter, desto genauer die Antwort. Dachtyp, ungefähre Fläche, was Ihnen aufgefallen ist — und wenn möglich zwei, drei Fotos.",
+    "name": "Name",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "phoneOptional": "optional, beschleunigt die Rückmeldung",
+    "urgency": "Wie dringend ist es?",
+    "service": "Worum geht es?",
+    "roofType": "Dachtyp",
+    "roofTypeOptional": "optional",
+    "postalCode": "Postleitzahl",
+    "locality": "Ort",
+    "message": "Ihre Nachricht",
+    "messageHint": "Zum Beispiel: Ziegeldach, ca. 120 m², Baujahr 1978, Wasserfleck an der Decke im Obergeschoss.",
+    "messagePlaceholder": "Was ist Ihnen aufgefallen?",
+    "photos": "Fotos vom Dach",
+    "photosOptional": "optional, bis zu 5 Bilder",
+    "photosHint": "Ein Foto sagt mehr als eine Seite Text. Bilder werden vor dem Hochladen automatisch verkleinert.",
+    "photosDrop": "Fotos auswählen oder hierher ziehen",
+    "photosRemove": "Entfernen",
+    "photosCount": "{count} von {max} Bildern",
+    "photosPreparing": "Wird vorbereitet …",
+    "consent": "Ich bin einverstanden, dass meine Angaben zur Bearbeitung dieser Anfrage gespeichert werden.",
+    "consentLink": "Datenschutzerklärung",
+    "submit": "Anfrage absenden",
+    "submitting": "Wird gesendet …",
+    "required": "Pflichtfeld",
+    "emergencyHint": "Bei laufendem Wassereintritt ist ein Anruf schneller als dieses Formular. Rufen Sie an:",
+    "responsePromise": "Wir melden uns innerhalb eines Werktags.",
+    "successTitle": "Ihre Anfrage ist angekommen",
+    "successBody": "Sie bekommen gleich eine Bestätigung per E-Mail mit einer Zusammenfassung. Wir melden uns innerhalb eines Werktags.",
+    "successPhotos": "{count} Fotos übernommen.",
+    "successAgain": "Weitere Anfrage stellen",
+    "successDemo": "Hinweis: Es sind noch keine Zugangsdaten hinterlegt. Die Anfrage wurde geprüft, aber nicht gespeichert und nicht versendet.",
+    "errorTitle": "Das hat nicht geklappt",
+    "errorBody": "Die Anfrage konnte nicht übermittelt werden. Bitte versuchen Sie es noch einmal — oder rufen Sie an, das geht in jedem Fall.",
+    "errorFields": "Bitte prüfen Sie die markierten Felder.",
+    "errors": {
+      "name": "Bitte nennen Sie uns Ihren Namen, damit wir Sie ansprechen können.",
+      "nameLong": "Das ist etwas lang für ein Namensfeld — bitte kürzen Sie es.",
+      "email": "Bitte geben Sie eine E-Mail-Adresse an, unter der wir Sie erreichen.",
+      "phone": "Diese Telefonnummer scheint zu lang zu sein.",
+      "urgency": "Bitte sagen Sie uns, wie dringend es ist — davon hängt ab, wie schnell wir uns melden.",
+      "service": "Bitte wählen Sie aus, worum es ungefähr geht. Wenn Sie unsicher sind, nehmen Sie „Dacheindeckung“.",
+      "postalCode": "Bitte geben Sie die Postleitzahl an, damit wir die Anfahrt einschätzen können.",
+      "locality": "Bitte geben Sie den Ort an.",
+      "messageShort": "Ein, zwei Sätze mehr helfen uns sehr — was genau ist Ihnen aufgefallen?",
+      "messageLong": "Das ist mehr Text, als wir hier verarbeiten können. Kürzen Sie ihn bitte oder rufen Sie an.",
+      "consent": "Ohne Ihre Einwilligung dürfen wir die Anfrage leider nicht speichern.",
+      "photoType": "Dieses Dateiformat können wir nicht lesen. JPG, PNG oder WebP funktionieren.",
+      "photoSize": "Dieses Bild ist zu gross. Bitte wählen Sie ein kleineres.",
+      "photoMax": "Mehr als {max} Bilder können wir leider nicht entgegennehmen."
+    },
+    "urgencyOptions": {
+      "emergency": "Notfall — es läuft Wasser",
+      "soon": "In den nächsten Wochen",
+      "planning": "Ich plane für später"
+    },
+    "roofOptions": {
+      "tile": "Ziegel",
+      "slate": "Schiefer",
+      "metal": "Blech",
+      "flat": "Flachdach",
+      "unknown": "Weiss ich nicht"
+    },
+    "choose": "Bitte wählen",
+    "mapHeading": "Anfahrt",
+    "mapLoad": "Karte laden",
+    "mapNotice": "Die Karte wird erst auf Klick von OpenStreetMap geladen. Vorher verlässt keine Anfrage Ihren Browser.",
+    "mapProvider": "OpenStreetMap",
+    "openInMaps": "In Karten-App öffnen",
+    "contactHeading": "Direkt erreichen",
+    "hoursHeading": "Erreichbarkeit"
+  },
+  "region": {
+    "canton": "Kanton {canton}",
+    "typical": "Typisch hier:",
+    "sources": "Quellen",
+    "servicesHeading": "Unsere Leistungen in {place}",
+    "nearby": "Nachbargemeinden",
+    "cta": "Kostenvoranschlag und Anfahrt nach {place} sind kostenlos."
+  },
+  "map": {
+    "workshop": "Betrieb in Holzem",
+    "places": "Regelmässige Einsatzorte",
+    "nationwide": "Angefahren wird das ganze Grossherzogtum — die Anfahrt kostet in keinem Fall etwas, auch wenn daraus kein Auftrag wird.",
+    "attribution": "Kartengrundlage © OpenStreetMap"
+  },
+  "anatomy": {
+    "scrollHint": "Zum Ansehen seitlich wischen"
+  }
+}
